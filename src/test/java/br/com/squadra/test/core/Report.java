@@ -91,9 +91,9 @@ public class Report {
 		String nomeDir = System.getProperty("user.dir") + "\\target\\report-html-" + dateFormat.format(date);
 		new File(nomeDir).mkdir();
 
-		File extent = new File(System.getProperty("user.dir") + "\\target\\report-html\\");
+		File reportDir = new File(System.getProperty("user.dir") + "\\target\\report-html\\");
 		
-		if (extent.exists()) {
+		if (reportDir.exists()) {
 			String srcFolder = System.getProperty("user.dir") + "\\target\\report-html";
 			String destZipFile = nomeDir + "\\report-html-" + dateFormat.format(date) + ".zip";
 
@@ -112,7 +112,8 @@ public class Report {
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-
+			
+			System.out.println("Backup do relatorio realiado com sucesso");
 		}
 		else {
 			System.out.println("Não há relatórios para backup.");

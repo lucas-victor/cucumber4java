@@ -22,7 +22,7 @@ public class DriverFactory {
 
 
 	private final static String MODO_EXEC = "normal"; // normal ou headless // headless só chrome e firefox
-	private final static String BROWSER_ESCOLHIDO = BrowserType.CHROME; // firefox, IE, edge
+	private final static String BROWSER_ESCOLHIDO = BrowserType.CHROME; //Altere para rodar com chrome, firefox, IE, edge
 
 	private DriverFactory() {
 	};
@@ -31,11 +31,33 @@ public class DriverFactory {
 
 		if (driver == null) {
 			try {
-				Browser browser = Browser.validaBrowser(BrowserType.CHROME);		
-				System.setProperty(browser.getPropriedadeDriver(), browser.getPathDriver());	
-	
-				definirDriver(BrowserType.CHROME, MODO_EXEC);
+				
+				switch (BROWSER_ESCOLHIDO) {
+				case "chrome":
+					Browser chrome = Browser.validaBrowser(BrowserType.CHROME);		
+					System.setProperty(chrome.getPropriedadeDriver(), chrome.getPathDriver());			
+					definirDriver(chrome.getNome(), MODO_EXEC);
+					break;
+				case "firefox":
+					Browser firefox = Browser.validaBrowser(BrowserType.FIREFOX);		
+					System.setProperty(firefox.getPropriedadeDriver(), firefox.getPathDriver());			
+					definirDriver(firefox.getNome(), MODO_EXEC);
+					break;
+				case "internet explorer":
+					Browser iE = Browser.validaBrowser(BrowserType.IE);		
+					System.setProperty(iE.getPropriedadeDriver(), iE.getPathDriver());			
+					definirDriver(iE.getNome(), MODO_EXEC);
+					break;
+				case "MicrosoftEdge":
+					Browser edge = Browser.validaBrowser(BrowserType.EDGE);		
+					System.setProperty(edge.getPropriedadeDriver(), edge.getPathDriver());			
+					definirDriver(edge.getNome(), MODO_EXEC);
+					break;
 
+				default:
+					break;
+				}		
+				
 			} catch (BrowserInvalidoException e) {
 				System.out.println("Browser inválido.");
 			}
@@ -50,13 +72,13 @@ public class DriverFactory {
 		if (modoExec.equalsIgnoreCase("headless")) {
 			if (browserType == "chrome" || browserType == "googlechrome") {
 
-				// Ativa a option do modo headless browser
+				// Ativa o modo headless browser
 				ChromeOptions options = new ChromeOptions();
 				options.addArguments("--headless");
 				driver = new ChromeDriver(options);
 			} else if (browserType == "firefox") {
 
-				// Ativa a option do modo headless browser
+				// Ativa o modo headless browser
 				FirefoxOptions options = new FirefoxOptions();
 				options.addArguments("--headless");
 				driver = new FirefoxDriver(options);
