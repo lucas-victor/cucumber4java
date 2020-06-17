@@ -1,0 +1,105 @@
+package br.com.squadra.test.core;
+
+import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.BrowserType;
+
+import br.com.squadra.test.exceptions.BrowserInvalidoException;
+
+public class DriverFactory {
+
+	private static WebDriver driver;
+
+
+	private final static String MODO_EXEC = "normal"; // normal ou headless // headless só chrome e firefox
+	private final static String BROWSER_ESCOLHIDO = BrowserType.CHROME; // firefox, IE, edge
+
+	private DriverFactory() {
+	};
+
+	public static WebDriver getDriver() {
+
+		if (driver == null) {
+			try {
+				Browser browser = Browser.validaBrowser(BrowserType.CHROME);		
+				System.setProperty(browser.getPropriedadeDriver(), browser.getPathDriver());	
+	
+				definirDriver(BrowserType.CHROME, MODO_EXEC);
+
+			} catch (BrowserInvalidoException e) {
+				System.out.println("Browser inválido.");
+			}
+			// driver.manage().window().maximize();
+		}
+
+		return driver;
+	}
+
+	private static void definirDriver(String browserType, String modoExec) throws BrowserInvalidoException {
+
+		if (modoExec.equalsIgnoreCase("headless")) {
+			if (browserType == "chrome" || browserType == "googlechrome") {
+
+				// Ativa a option do modo headless browser
+				ChromeOptions options = new ChromeOptions();
+				options.addArguments("--headless");
+				driver = new ChromeDriver(options);
+			} else if (browserType == "firefox") {
+
+				// Ativa a option do modo headless browser
+				FirefoxOptions options = new FirefoxOptions();
+				options.addArguments("--headless");
+				driver = new FirefoxDriver(options);
+			}
+
+			else if (browserType == "internet explorer") {
+				// IE não tem headless oficial.
+				driver = new InternetExplorerDriver();
+			}
+
+			else if (browserType == "MicrosoftEdge") {
+				// Falta implementar headless no edge
+				// EdgeOptions options = new EdgeOptions();
+				driver = new EdgeDriver();
+			} else
+				throw new BrowserInvalidoException();
+		} else {
+			if (browserType == "chrome" || browserType == "googlechrome") {
+				driver = new ChromeDriver();
+			}
+
+			else if (browserType == "firefox") {
+				driver = new FirefoxDriver();
+			}
+
+			else if (browserType == "internet explorer") {
+				driver = new InternetExplorerDriver();
+			}
+
+			else if (browserType == "MicrosoftEdge") {
+				driver = new EdgeDriver();
+			} else
+				throw new BrowserInvalidoException();
+		}
+
+	}
+
+	
+	public static void fecharDriver() {
+		if (driver != null) {
+			driver.quit();
+			driver = null;
+		}
+	}
+
+}
