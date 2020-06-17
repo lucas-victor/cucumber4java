@@ -11,26 +11,32 @@ import java.util.Calendar;
 
 public class DbManager {
 	
-	public static void main(String[] args) {
+	public static void main (String[] args) {
 		//DbManager db = DbManager.getDbManagerSql();
-		DbManager db = new DbManager();
-		//db.executaQuery("insert into produtos (nome, descricao, preco) values ('test3', 'test3', 2.00)");
-		//db.printResultSet(db.executaQueryResultSet("select * from produtos"));
-		//db.BackupDbSql();
-		//db.RestoreDbSql();	
+		//db.backupDbSql();
+		
+		//DbManager db = DbManager.getDbManagerMySql();
+		//db.backupDbMySql();
+		//db.restoreDbMySql();
 	}
 
-	private String mySqlDumpPath = "D:\\xampp\\mysql\\bin\\mysqldump.exe";
-	private String BkpAbsolutPath = "D:\\dumpMySql\\meubkpluksdb.sql";
-
+	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_2020_06_17_08_04_23.BAK";
+	private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
+	private final static String SQL_BKP_PATH = "D:\\testBackupSql\\"; 
+	
+	private final static String MYSQL_DUMP_PATH = "D:\\xampp\\mysql\\bin\\mysqldump.exe";
+	private final static String MYSQL_FOLDER_PATH = "D:\\xampp\\mysql\\bin\\mysql";
+	private final static String MYSQL_BKP_PATH = "D:\\dumpMySql\\";
+	private final static String MIRROR_DBNAME_RESTORE_MYSQL = "meubkpluksdb.sql";
+	
 	private String user = "sa";
 	private String pass = "123";
 	private String dbName = "DbLuksTest";
 	private String server = "localhost";
 	private String port = "1433";
 	private Connection con = null;
-	private String bkpSqlPath = "'D:\\testBackupSql\\LUKSDB_TEST_BKP.BAK'"; 
-
+	
+	
 	public DbManager() {
 	}
 
@@ -49,36 +55,41 @@ public class DbManager {
 	}
 
 	public static DbManager getDbManagerSql() {
-		DbManager db = new DbManager("sa", "123", "DbLuksTest", "localhost", "1433");
-		return db;
+		//dados conexao db principal da automacao sqlServer
+		return new DbManager("sa", "123", "DbLuksTest", "localhost", "1433");
 	}
 	
-//	public static DbManager getDbManagerMySql() {
-//		DbManager db = new DbManager("root", "", "luksdb");
-//		return db;
-//	}
+	public static DbManager getDbManagerMySql() {
+		//dados conexao db mySql
+		return new DbManager("root", "", "luksdb");		 
+	}
 	
-	public void BackupDbSql() {
+	public void backupDbSql() {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
-		String query = "BACKUP DATABASE "+ getDbName() +" TO DISK = " + bkpSqlPath;
+		String query = "BACKUP DATABASE "+ getDbName() +" TO DISK = '" + SQL_BKP_PATH + "LUKSDB_" + gerarNomeComData() + ".BAK'";
 		try {
 			con = conect.getConnectionSql();
 			PreparedStatement stmt = con.prepareStatement(query);
 			stmt.execute();
 			con.close();
+			System.out.println("Backup realizado!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void RestoreDbSql() {
-		Conect conect = new Conect("master", getUser(), getPass(), getServer(), getPort());
-		String query = "RESTORE DATABASE " + getDbName() + " FROM DISK = " + bkpSqlPath + " WITH REPLACE";
+	public void restoreDbSql() {
+		Conect conect = new Conect(DBNAME_SUPPORT_RESTORE_SQL, getUser(), getPass(), getServer(), getPort());
+		String query1 = "ALTER DATABASE " + getDbName() + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
+		String query2 = "RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH + MIRROR_DBNAME_RESTORE_SQL + "' WITH REPLACE";
 		try {
 			con = conect.getConnectionSql();
-			PreparedStatement stmt = con.prepareStatement(query);
+			PreparedStatement stmt = con.prepareStatement(query1);
+			stmt.execute();
+			stmt = con.prepareStatement(query2);
 			stmt.execute();
 			con.close();
+			System.out.println("Banco restaurado!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -121,91 +132,39 @@ public class DbManager {
 		}
 	}
 
-	// metodo exemplo
-	public void backupMySql() {
-		// bkp
-		String dump = "cmd.exe /c " + mySqlDumpPath + " --user=" + user + " --password=" + pass + " " + dbName + " > "
-				+ BkpAbsolutPath;
+
+	public void backupDbMySql() {
+		String dump = "cmd.exe /c " + MYSQL_DUMP_PATH + " --user=" + getUser() + " --password=" + getPass() + " " + getDbName() + " > "
+				+ MYSQL_BKP_PATH + "bkpLuksDb" + gerarNomeComData() + ".sql";
 		Runtime bkp = Runtime.getRuntime();
 		try {
 			bkp.exec(dump);
-			System.out.println(dump);
+			System.out.println("Backup realizado!");
+			//System.out.println(dump);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	// metodo exemplo
-	public void restoreMySql() {
-		// restaura bkp
-		String restauraBkp = "cmd.exe /c D:\\xampp\\mysql\\bin\\mysql --user=" + user + " --password=" + pass + " "
-				+ dbName + " < " + "D:\\dumpMySql\\meubkpluksdb.sql";
+	
+	public void restoreDbMySql() {
+		String restauraBkp = "cmd.exe /c " + MYSQL_FOLDER_PATH + " --user=" + getUser() + " --password=" + getPass() + " "
+				+ getDbName() + " < " + MYSQL_BKP_PATH + MIRROR_DBNAME_RESTORE_MYSQL;
 		try {
-			System.out.println("Restaurando a base.");
 			Runtime.getRuntime().exec(restauraBkp);
+			System.out.println("Banco restaurado!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private static String gerarNomeComData() {
-
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd _ hh:mm:ss");
-
 		Calendar c = Calendar.getInstance();
 		String s = sdf.format(c.getTime());
-		return s.replace("/", "-").replace(" ", "").replace(":", ".");
+		return s.replace("/", "_").replace(" ", "").replace(":", "_");
 	}
 
-//	/**
-//	 * Classe que realiza exportaÃ§Ã£o de banco de dados MySql
-//	 * 
-//	 * @param host     - EndereÃ§o host do banco de Dados ex:localhost
-//	 * @param bd       - Nome do Banco de Dados ex:meubd
-//	 * @param usuario  - Usuario de acesso ao banco de dados : ex:root
-//	 * @param senha    - Senha de Acesso ao banco de dados : ex:1234
-//	 * @param location - Local que serÃ¡ salvo o sql contendo apenas o nome sem a
-//	 *                 extensÃ£o ex:c:\\backup
-//	 * @return - uma string informando se o processo foi salvo com sucesso ou nÃ£o
-//	 */
-//	public static String exportarBD(String host, String bd, String usuario, String senha, String location) {
-//
-//		StringBuilder dump = new StringBuilder();
-//
-//		// local onde se encontra o MysqlDump
-//		dump.append("D:\\xampp\\mysql\\bin\\mysqldump.exe");
-//		// solicitando o host ex:localhost
-//		dump.append(" -h");
-//		dump.append(host);
-//		// solicitando o usuario
-//		dump.append(" -u");
-//		dump.append(usuario);
-//		// solicitando a senha
-//		dump.append(" -p");
-//		dump.append(senha);
-//		// solicitando o bd
-//		dump.append(" --add-drop-database -B");// se existir o sql, sobrescreverÃ¡
-//		dump.append(bd);
-//		// solicitando o local para salvar ex:c\\mysql
-//		dump.append(" -r");
-//		dump.append(location);
-//		dump.append(gerarNomeComData());// esse metodo devolverÃ¡ o ano seguido da hora ex:mysql20170609_073230
-//		dump.append(".sql");// add a extensÃ£o .sql
-//
-//		Process p;
-//		try {
-//			p = Runtime.getRuntime().exec(dump.toString());
-//			p.waitFor();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return "Erro ao realizar Backup";
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//			return "Erro ao realizar Backup";
-//		}
-//		return "Banco de Dados foi Exportado com sucesso para a pasta \n" + location;
-//
-//	}
 
 	public String getUser() {
 		return user;
