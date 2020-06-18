@@ -25,11 +25,12 @@ import cucumber.api.Scenario;
 
 public class Report {
 	
+	private final static String SCREENSHOT_PATH = "target/report-html/ScreenShot/";
+	private final static String RELATIVE_SCREENSHOT_PATH = "ScreenShot/";
+	
 	private TakesScreenshot ss;
 	private Scenario scenario;
-	private String screenShotPath = "target/report-html/ScreenShot/";
-	private String relativeScreenShotPath = "ScreenShot/";
-	
+
 	public Report() {
 		
 	}
@@ -44,7 +45,7 @@ public class Report {
 		this.scenario = cenario;
 		File arquivo = ss.getScreenshotAs(OutputType.FILE);
 		String ImageName = cenario.getName().trim() + ".jpg";
-		String imagePath = screenShotPath + ImageName;
+		String imagePath = SCREENSHOT_PATH + ImageName;
 		FileUtils.copyFile(arquivo, new File(imagePath));
 		/*
 		 * cenario.write("Adicionando imagem no relatorio pelo cenario..."); byte []
@@ -52,18 +53,18 @@ public class Report {
 		 * "target/png");
 		 */
 		writeReport("Imagem adicionada no relatorio: " + ImageName);
-		addImageReport(relativeScreenShotPath + ImageName);
+		addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 	}
 	
 	public void getScreenShot(String printName) {
 		this.ss = (TakesScreenshot) getDriver();
 		File arquivo = ss.getScreenshotAs(OutputType.FILE);
 		String ImageName = printName.trim() + ".jpg";
-		String imagePath = screenShotPath + ImageName;
+		String imagePath = SCREENSHOT_PATH + ImageName;
 		try {
 			FileUtils.copyFile(arquivo, new File(imagePath));
 			writeReport("Imagem adicionada no relatorio: " + ImageName);
-			addImageReport(relativeScreenShotPath + ImageName);
+			addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

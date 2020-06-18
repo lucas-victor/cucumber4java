@@ -1,13 +1,8 @@
 package br.com.squadra.test.runner;
 
-
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-
-import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
-
 import br.com.squadra.test.core.Report;
 import br.com.squadra.test.pages.BasePage;
 import cucumber.api.CucumberOptions;
@@ -21,9 +16,7 @@ import cucumber.api.junit.Cucumber;
 		glue = {"br.com.squadra.test.steps"},
 		tags = "@Run",
 		plugin = {"pretty", "html:target/report-html/", "json:target:report.json",
-				//"com.cucumber.listener.ExtentCucumberFormatter:target/relatorios/extent-report.html",
-				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:target/report-html/extent-report.html"
-		},
+				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:target/report-html/extent-report.html"},
 		monochrome = true,
 		snippets = SnippetType.CAMELCASE,
 		dryRun = false,
@@ -31,7 +24,6 @@ import cucumber.api.junit.Cucumber;
 		)
 
 public class Runner extends BasePage {
-	
 	
 	@BeforeClass
 	public static void before() {

@@ -2,8 +2,6 @@ package br.com.squadra.test.steps;
 
 import java.io.IOException;
 
-import org.openqa.selenium.TakesScreenshot;
-
 import br.com.squadra.test.core.Report;
 import br.com.squadra.test.pages.FolhaPage;
 import br.com.squadra.test.pages.GloboPage;
@@ -11,7 +9,6 @@ import br.com.squadra.test.pages.GloboesportePage;
 import br.com.squadra.test.pages.HomePage;
 import br.com.squadra.test.pages.LoginPage;
 import br.com.squadra.test.pages.UolPage;
-import cucumber.api.Scenario;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;

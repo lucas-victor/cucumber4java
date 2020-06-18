@@ -11,15 +11,6 @@ import java.util.Calendar;
 
 public class DbManager {
 	
-	public static void main (String[] args) {
-		//DbManager db = DbManager.getDbManagerSql();
-		//db.backupDbSql();
-		
-		//DbManager db = DbManager.getDbManagerMySql();
-		//db.backupDbMySql();
-		//db.restoreDbMySql();
-	}
-
 	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_2020_06_17_08_04_23.BAK";
 	private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
 	private final static String SQL_BKP_PATH = "D:\\testBackupSql\\"; 
@@ -60,7 +51,7 @@ public class DbManager {
 	}
 	
 	public static DbManager getDbManagerMySql() {
-		//dados conexao db mySql
+		//dados conexao db mySql (bonus)
 		return new DbManager("root", "", "luksdb");		 
 	}
 	
