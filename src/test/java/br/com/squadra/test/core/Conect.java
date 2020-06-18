@@ -36,8 +36,16 @@ public class Conect {
 	}
 
 	private String getUrlConnection() {
-		this.connectionUrl = "jdbc:sqlserver://" + getServer() + ":" + getPort() + ";databaseName=" + getDbName() + ";user=" + getUser()
-				+ ";password=" + getPass();
+		this.connectionUrl = "jdbc:sqlserver://" 
+				+ getServer() 
+				+ ":" 
+				+ getPort() 
+				+ ";databaseName=" 
+				+ getDbName() 
+				+ ";user=" 
+				+ getUser()
+				+ ";password=" 
+				+ getPass();
 		return this.connectionUrl;
 	}
 	

@@ -27,32 +27,40 @@ public class Report {
 	
 	private final static String SCREENSHOT_PATH = "target/report-html/ScreenShot/";
 	private final static String RELATIVE_SCREENSHOT_PATH = "ScreenShot/";
+	private final static String REPORT_CONFIG = System.getProperty("user.dir") + "\\src\\test\\resources\\configs\\extent-config.xml";
+	private final static String SOURCE_FOLDER_ZIP = System.getProperty("user.dir") + "\\target\\report-html";
+	private final static String REPORT_FOLDER = System.getProperty("user.dir") + "\\target\\report-html\\";
 	
 	private TakesScreenshot ss;
 	private Scenario scenario;
 
-	public Report() {
-		
+	public Report() {		
 	}
 	
 	public String getReportConfigPath() {
-		String reportConfigPath = System.getProperty("user.dir") + "\\src\\test\\resources\\configs\\extent-config.xml";
-		return reportConfigPath;
+		return REPORT_CONFIG;
+	}
+	
+	public static Report getReport() {
+		return new Report();
 	}
 	
 	public void getScreenShot(Scenario cenario) throws IOException {
 		this.ss = (TakesScreenshot) getDriver();
 		this.scenario = cenario;
+		
 		File arquivo = ss.getScreenshotAs(OutputType.FILE);
 		String ImageName = cenario.getName().trim() + ".jpg";
 		String imagePath = SCREENSHOT_PATH + ImageName;
 		FileUtils.copyFile(arquivo, new File(imagePath));
+		
 		/*
 		 * cenario.write("Adicionando imagem no relatorio pelo cenario..."); byte []
 		 * screenshot = ss.getScreenshotAs(OutputType.BYTES); cenario.embed(screenshot,
 		 * "target/png");
 		 */
-		writeReport("Imagem adicionada no relatorio: " + ImageName);
+		
+		//writeReport("Imagem adicionada no relatorio: " + ImageName);
 		addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 	}
 	
@@ -61,9 +69,10 @@ public class Report {
 		File arquivo = ss.getScreenshotAs(OutputType.FILE);
 		String ImageName = printName.trim() + ".jpg";
 		String imagePath = SCREENSHOT_PATH + ImageName;
+		
 		try {
 			FileUtils.copyFile(arquivo, new File(imagePath));
-			writeReport("Imagem adicionada no relatorio: " + ImageName);
+			//writeReport("Imagem adicionada no relatorio: " + ImageName);
 			addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -92,10 +101,10 @@ public class Report {
 		String nomeDir = System.getProperty("user.dir") + "\\target\\report-html-" + dateFormat.format(date);
 		new File(nomeDir).mkdir();
 
-		File reportDir = new File(System.getProperty("user.dir") + "\\target\\report-html\\");
+		File reportDir = new File(REPORT_FOLDER);
 		
 		if (reportDir.exists()) {
-			String srcFolder = System.getProperty("user.dir") + "\\target\\report-html";
+			String srcFolder = SOURCE_FOLDER_ZIP;
 			String destZipFile = nomeDir + "\\report-html-" + dateFormat.format(date) + ".zip";
 
 			ZipOutputStream zip = null;
@@ -114,7 +123,7 @@ public class Report {
 				e.printStackTrace();
 			}
 			
-			System.out.println("Backup do relatorio realiado com sucesso");
+			System.out.println("Backup do relatório realizado com sucesso!");
 		}
 		else {
 			System.out.println("Não há relatórios para backup.");

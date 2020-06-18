@@ -18,7 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class DSL {
 
-	private Integer ESPERA_PADRAO = 30;
+	private final static Integer ESPERA_PADRAO = 30;
 
 	public DSL() {
 

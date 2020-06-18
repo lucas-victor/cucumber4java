@@ -41,7 +41,7 @@ public class TestRule {
 		//@@@@@ Importante:
 		//Quando configurar a string de conexão com o banco de dados SqlServer, descomentar o metodo abaixo 
 		//para restaurar a base no inicio de cada teste.
-		//db.RestoreDbSql();
+		//db.restoreDbSql();
 	}
 
 	public Scenario getScenario() {

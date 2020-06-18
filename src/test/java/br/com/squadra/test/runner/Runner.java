@@ -27,14 +27,11 @@ public class Runner extends BasePage {
 	
 	@BeforeClass
 	public static void before() {
-		Report report = new Report();
-		report.limparPastas();
+		Report.getReport().limparPastas();
 	}
 	
 	@AfterClass
 	public static void writeExtentReport() {
-		//ExtentCucumberAdapter.addTestStepLog("Teste mensagem after...");
-		Report report = new Report();
-		report.zipFolder();
+		Report.getReport().zipFolder();
 	}
 }

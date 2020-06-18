@@ -4,14 +4,14 @@ import br.com.squadra.test.exceptions.BrowserInvalidoException;
 
 public class Browser {
 
-	private final static String PATH_CHROMEDRIVER_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\chromedriver.exe";
-	private final static String PATH_FIREFOXDRIVER_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\geckodriver.exe";
-	private final static String PATH_IEDRIVER_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\IEDriverServer.exe";
-	private final static String PATH_EDGEDRIVER_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\MicrosoftWebDriver.exe";
-	private final static String PATH_CRHOMEDRIVER_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//chromedriver";
-	private final static String PATH_FIREFOXDRIVER_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//geckodriver";
-	private final static String PATH_IEDRIVER_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//IEDriverServer";
-	private final static String PATH_EDGEDRIVER_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//MicrosoftWebDriver";
+	private final static String CHROMEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\chromedriver.exe";
+	private final static String FIREFOXDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\geckodriver.exe";
+	private final static String IEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\IEDriverServer.exe";
+	private final static String EDGEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\MicrosoftWebDriver.exe";
+	private final static String CRHOMEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//chromedriver";
+	private final static String FIREFOXDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//geckodriver";
+	private final static String IEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//IEDriverServer";
+	private final static String EDGEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//MicrosoftWebDriver";
 	
 	private String nome;
 	private String propriedadeDriver;
@@ -41,23 +41,23 @@ public class Browser {
 		if (osname.toLowerCase().contains("windows")) {
 
 			if (navegador.equals("chrome") || navegador.equals("googlechrome")) {
-				return new Browser("chrome", "webdriver.chrome.driver", PATH_CHROMEDRIVER_WIN);
+				return new Browser("chrome", "webdriver.chrome.driver", CHROMEDRIVER_PATH_WIN);
 			} else if (navegador.equals("firefox")) {
-				return new Browser("firefox", "webdriver.gecko.driver", PATH_FIREFOXDRIVER_WIN);
+				return new Browser("firefox", "webdriver.gecko.driver", FIREFOXDRIVER_PATH_WIN);
 			} else if (navegador.equals("MicrosoftEdge")) {
-				return new Browser("MicrosoftEdge", "webdriver.edge.driver", PATH_EDGEDRIVER_WIN);
+				return new Browser("MicrosoftEdge", "webdriver.edge.driver", EDGEDRIVER_PATH_WIN);
 			} else if (navegador.equals("internet explorer")) {
-				return new Browser("internet explorer", "webdriver.ie.driver", PATH_IEDRIVER_WIN);
+				return new Browser("internet explorer", "webdriver.ie.driver", IEDRIVER_PATH_WIN);
 			}
 		}else{
 			if (navegador.equals("chrome") || navegador.equals("googlechrome")) {
-				return new Browser("chrome", "webdriver.chrome.driver", PATH_CRHOMEDRIVER_LINUX);
+				return new Browser("chrome", "webdriver.chrome.driver", CRHOMEDRIVER_PATH_LINUX);
 			} else if (navegador.equals("firefox")) {
-				return new Browser("firefox", "webdriver.gecko.driver", PATH_FIREFOXDRIVER_LINUX);
+				return new Browser("firefox", "webdriver.gecko.driver", FIREFOXDRIVER_PATH_LINUX);
 			} else if (navegador.equals("MicrosoftEdge")) {
-				return new Browser("MicrosoftEdge", "webdriver.edge.driver", PATH_EDGEDRIVER_LINUX);
+				return new Browser("MicrosoftEdge", "webdriver.edge.driver", EDGEDRIVER_PATH_LINUX);
 			} else if (navegador.equals("internet explorer")) {
-				return new Browser("internet explorer", "webdriver.ie.driver", PATH_IEDRIVER_LINUX);
+				return new Browser("internet explorer", "webdriver.ie.driver", IEDRIVER_PATH_LINUX);
 			}
 		}
 		

@@ -21,8 +21,8 @@ public class DriverFactory {
 	private static WebDriver driver;
 
 
-	private final static String EXEC_MODE = "normal"; // normal ou headless // headless só chrome e firefox
-	private final static String BROWSER_CHOSEN = BrowserType.CHROME; //Altere para rodar com chrome, firefox, IE, edge
+	private final static String EXEC_MODE = "normal"; //Altere normal ou headless // headless só chrome e firefox
+	private final static String CHOSEN_BROWSER = BrowserType.CHROME; //Altere para rodar com chrome, firefox, IE, edge
 
 	private DriverFactory() {
 	};
@@ -32,7 +32,7 @@ public class DriverFactory {
 		if (driver == null) {
 			try {
 				
-				switch (BROWSER_CHOSEN) {
+				switch (CHOSEN_BROWSER) {
 				case "chrome":
 					Browser chrome = Browser.validaBrowser(BrowserType.CHROME);		
 					System.setProperty(chrome.getPropriedadeDriver(), chrome.getPathDriver());			
