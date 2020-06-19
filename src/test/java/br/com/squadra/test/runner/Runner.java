@@ -27,7 +27,7 @@ public class Runner extends BasePage {
 	
 	@BeforeClass
 	public static void before() {
-		//Report.getReport().limparPastas();
+		Report.getReport().limparPastas();
 	}
 	
 	@AfterClass
