@@ -25,11 +25,17 @@ import cucumber.api.Scenario;
 
 public class Report {
 	
-	private final static String SCREENSHOT_PATH = "target/report-html/ScreenShot/";
-	private final static String RELATIVE_SCREENSHOT_PATH = "ScreenShot/";
+	private final static String SCREENSHOT_PATH = "target/report-html/screenShot/";
+	private final static String RELATIVE_SCREENSHOT_PATH = "screenShot/";
 	private final static String REPORT_CONFIG = System.getProperty("user.dir") + "\\src\\test\\resources\\configs\\extent-config.xml";
 	private final static String SOURCE_FOLDER_ZIP = System.getProperty("user.dir") + "\\target\\report-html";
 	private final static String REPORT_FOLDER = System.getProperty("user.dir") + "\\target\\report-html\\";
+	
+	private final static String SCREENSHOT_FULLPATH = System.getProperty("user.dir") + "/target/report-html/screenShot";
+	private final static String QUERY_FULLPATH = System.getProperty("user.dir") + "/target/report-html/actualQueryResults"; 
+	private final static String LOGGER_FULLPATH = System.getProperty("user.dir") + "/target/report-html/logger";
+	private final static String SPARK_FULLPATH = System.getProperty("user.dir") + "/target/report-html/spark";
+	private final static String REPORT_FULLPATH = System.getProperty("user.dir") + "/target/report-html";
 	
 	private TakesScreenshot ss;
 	private Scenario scenario;
@@ -161,17 +167,22 @@ public class Report {
 	}
 
 	public void limparPastas() {
-		String screenShotPath = System.getProperty("user.dir") + "/target/report-html/ScreenShot";
-		String loggerPath = System.getProperty("user.dir") + "/target/report-html/Logger";
-		String sparkPath = System.getProperty("user.dir") + "/target/report-html/Spark";
-		String reportPath = System.getProperty("user.dir") + "/target/report-html";
-		
-		File pasta1 = new File(screenShotPath);
-		File pasta2 = new File(loggerPath);
-		File pasta3 = new File(sparkPath);
-		File pasta4 = new File(reportPath);
+
+		File pasta1 = new File(SCREENSHOT_FULLPATH);
+		File pasta2 = new File(QUERY_FULLPATH);
+		File pasta3 = new File(LOGGER_FULLPATH);
+		File pasta4 = new File(SPARK_FULLPATH);
+		File pasta5 = new File(REPORT_FULLPATH);
 		
 		System.out.println("Limpando pastas de arquivos...");
+		if (pasta5.exists()) {
+			deleteFiles(pasta5);
+			pasta5.mkdir();
+		}
+		else {
+			pasta5.mkdir();
+		}
+		
 		if (pasta4.exists()) {
 			deleteFiles(pasta4);
 			pasta4.mkdir();
@@ -179,7 +190,7 @@ public class Report {
 		else {
 			pasta4.mkdir();
 		}
-		
+
 		if (pasta3.exists()) {
 			deleteFiles(pasta3);
 			pasta3.mkdir();

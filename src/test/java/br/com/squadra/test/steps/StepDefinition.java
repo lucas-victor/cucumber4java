@@ -2,6 +2,9 @@ package br.com.squadra.test.steps;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+
+import br.com.squadra.test.core.DbManager;
 import br.com.squadra.test.core.Report;
 import br.com.squadra.test.pages.FolhaPage;
 import br.com.squadra.test.pages.GloboPage;
@@ -23,6 +26,7 @@ public class StepDefinition {
 	private FolhaPage folhaPage = new FolhaPage();	
 	private Report report = new Report();
 	private TestRule tr = new TestRule();
+	private DbManager db = DbManager.getDbManagerSql();
 
 	
 	@Given("que acesso o site do google")
@@ -31,6 +35,22 @@ public class StepDefinition {
 
 		report.writeReport("Teste google acesso write...");
 		report.getScreenShot("testeAcessoGoogle");
+		
+//		String result = db.executeQueryWithResult("select * from produtos");
+//		report.writeReport("Query executada: select * from produtos" );
+//		report.writeReport(result);
+//		
+//		db.writeFileResult("teste", "teste escreve arq");
+//		
+//		db.assertFilesResult("19-06-2020-11.59.46.txt", "19-06-2020-11.59.46.txt");
+		
+//		String resultExp = db.readFileResults("src/test/java/queryResultsExpected/" + "19-06-2020-11.59.46.txt");
+//		String resultAct = db.readFileResults("target/report-html/queryResultsActual/" + "19-06-2020-11.59.46.txt");
+//		
+//		Assert.assertEquals(resultExp, resultAct);
+//		//Assert.assertEquals("", "teste");
+		
+		db.assertFilesResults("19-06-2020-11.59.46.txt", "19-06-2020-11.59.46.txt");
 	}
 
 	@When("pesquiso pelo site {string}")

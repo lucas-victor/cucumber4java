@@ -1,7 +1,11 @@
 package br.com.squadra.test.core;
 
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,15 +17,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class DbManager {
+import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 
-	public static void main(String[] args) throws SQLException {
-		DbManager db = DbManager.getDbManagerSql();
-		//System.out.println(db.executaQueryWithResult("SELECT id, nome FROM produtos;"));
-		System.out.println(db.executaQueryWithResult("select * from produtos p\r\n" + 
-				"join vendas v on p.id = v.idProd;"));
-		
-	}
+import com.aventstack.extentreports.utils.FileUtil;
+
+public class DbManager {
 
 	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_2020_06_17_08_04_23.BAK";
 	private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
@@ -32,6 +33,8 @@ public class DbManager {
 	private final static String MYSQL_FOLDER_PATH = "D:\\xampp\\mysql\\bin\\mysql";
 	private final static String MYSQL_BKP_PATH = "D:\\dumpMySql\\";
 
+	private final static String QUERY_ACTUAL_RESULT_PATH = "target/report-html/actualQueryResults/";
+	private final static String QUERY_EXPECTED_RESULT_PATH = "src/test/java/expectedQueryResults/";
 
 	private String user = "sa";
 	private String pass = "123";
@@ -100,7 +103,7 @@ public class DbManager {
 		}
 	}
 
-	public void executaQuery(String query) {
+	public void executeQuery(String query) {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		try {
 			con = conect.getConnectionSql();
@@ -113,7 +116,7 @@ public class DbManager {
 		}
 	}
 
-	public String executaQueryWithResult(String query) {
+	public String executeQueryGetResult(String fileName, String query) {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		ResultSet rs = null;
 		String result = "";
@@ -122,37 +125,54 @@ public class DbManager {
 			Statement stmt = con.createStatement();
 			rs = stmt.executeQuery(query);
 			result = getTextResultSet(rs);
-			con.close();
 			System.out.println("query executada");
+			//writeFileResult(fileName, result);
+			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
 	
+	public String executeQueryWithResultFile(String fileName, String query) {
+		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
+		ResultSet rs = null;
+		String result = "";
+		String newFileName = "";
+		try {
+			con = conect.getConnectionSql();
+			Statement stmt = con.createStatement();
+			rs = stmt.executeQuery(query);
+			result = getTextResultSet(rs);
+			System.out.println("query executada");
+			newFileName = writeFileResult(fileName, result);
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return newFileName;
+	}
+
 	public String getTextResultSet(ResultSet rs) throws SQLException {
 		String result = "";
 		List<List> tabela = new ArrayList<List>();
-		List<String> lColunas = new ArrayList<String>();	
+		List<String> lColunas = new ArrayList<String>();
 		ResultSetMetaData meta = rs.getMetaData();
-		
+
 		for (int i = 1; i <= meta.getColumnCount(); i++) {
 			String nomeColunm = meta.getColumnName(i);
 			lColunas.add(nomeColunm);
-			//System.out.println("Column: " + lColunas.get(i-1));
 		}
 		tabela.add(lColunas);
-		
-		//int count = 1;
+
 		while (rs.next()) {
 			List<String> lValues = new ArrayList<String>();
 			for (int i = 1; i <= meta.getColumnCount(); i++) {
-				//System.out.println(rs.getString(i));
 				lValues.add(rs.getString(i));
 			}
 			tabela.add(lValues);
 		}
-		
+
 		String tabelaTexto = tabela.toString();
 		result = tabelaTexto
 				.replace("], ", "\n")
@@ -160,8 +180,70 @@ public class DbManager {
 				.replace(",", "")
 				.replace("]]", "");
 
-		//System.out.println(tabelaTextoTratado);
 		return result;
+	}
+
+	public String writeFileResult(String fileName, String text) {
+		String newFileName = fileName + "_" + gerarNomeComData() + ".txt";
+		String fullNameArq = QUERY_ACTUAL_RESULT_PATH + newFileName;
+		
+		try {
+			FileWriter arq = new FileWriter(fullNameArq);
+			PrintWriter gravaArq = new PrintWriter(arq);
+			gravaArq.print(text);
+			arq.close();
+			System.out.println("Arquivo gravado: " + fullNameArq);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return newFileName;
+	}
+
+	public void assertFilesResults(String fileNameExp, String fileNameAct) {
+
+		String expFilePath = QUERY_EXPECTED_RESULT_PATH + fileNameExp;
+		String actFilePath = QUERY_ACTUAL_RESULT_PATH + fileNameAct;
+
+		File fileExp = new File(expFilePath);
+		File fileAct = new File(actFilePath);
+		
+		boolean equals = assertTwoFiles(fileExp, fileAct);
+		Assert.assertEquals(true, equals);
+
+	}
+
+	private boolean assertTwoFiles(File file1, File file2) {
+		try {
+			if (FileUtils.contentEquals(file1, file2)) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public String readFileResults(String fullPathFile) {
+		BufferedReader buffRead;
+		String file = "";
+		try {
+			buffRead = new BufferedReader(new FileReader(fullPathFile));
+			while (true) {
+				if (file != null) {
+					System.out.println(file);
+				} else
+					break;
+				file = buffRead.readLine();
+			}
+			buffRead.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return file;
 	}
 
 	public void printResultSet(ResultSet rs) {
@@ -201,10 +283,10 @@ public class DbManager {
 	}
 
 	private static String gerarNomeComData() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd _ hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
 		Calendar c = Calendar.getInstance();
 		String s = sdf.format(c.getTime());
-		return s.replace("/", "_").replace(" ", "").replace(":", "_");
+		return s; 
 	}
 
 	public String getUser() {
