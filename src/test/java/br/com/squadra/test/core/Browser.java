@@ -4,14 +4,14 @@ import br.com.squadra.test.exceptions.BrowserInvalidoException;
 
 public class Browser {
 
-	private final static String CHROMEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\chromedriver.exe";
-	private final static String FIREFOXDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\geckodriver.exe";
-	private final static String IEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\IEDriverServer.exe";
-	private final static String EDGEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\resources\\drivers\\MicrosoftWebDriver.exe";
-	private final static String CRHOMEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//chromedriver";
-	private final static String FIREFOXDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//geckodriver";
-	private final static String IEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//IEDriverServer";
-	private final static String EDGEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//resources//drivers//MicrosoftWebDriver";
+	private final static String CHROMEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\java\\drivers\\chromedriver.exe";
+	private final static String FIREFOXDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\java\\drivers\\geckodriver.exe";
+	private final static String IEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\java\\drivers\\IEDriverServer.exe";
+	private final static String EDGEDRIVER_PATH_WIN = System.getProperty("user.dir") + "\\src\\test\\java\\drivers\\MicrosoftWebDriver.exe";
+	private final static String CRHOMEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//java//drivers//chromedriver";
+	private final static String FIREFOXDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//java//drivers//geckodriver";
+	private final static String IEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//java//drivers//IEDriverServer";
+	private final static String EDGEDRIVER_PATH_LINUX = System.getProperty("user.dir") + "//src//test//java//drivers//MicrosoftWebDriver";
 	
 	private String nome;
 	private String propriedadeDriver;

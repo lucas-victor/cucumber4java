@@ -54,8 +54,8 @@ public class DriverFactory {
 		return driver;
 	}
 	
-	private static void getDriverForName(String nomeBrowser) throws BrowserInvalidoException {
-		Browser browser = Browser.validaBrowser(nomeBrowser);		
+	private static void getDriverForName(String browserType) throws BrowserInvalidoException {
+		Browser browser = Browser.validaBrowser(browserType);		
 		System.setProperty(browser.getPropriedadeDriver(), browser.getPathDriver());			
 		definirDriver(browser.getNome(), EXEC_MODE);
 	}	
@@ -88,15 +88,12 @@ public class DriverFactory {
 			if (browserType == "chrome" || browserType == "googlechrome") {
 				driver = new ChromeDriver();
 			}
-
 			else if (browserType == "firefox") {
 				driver = new FirefoxDriver();
 			}
-
 			else if (browserType == "internet explorer") {
 				driver = new InternetExplorerDriver();
 			}
-
 			else if (browserType == "MicrosoftEdge") {
 				driver = new EdgeDriver();
 			} else

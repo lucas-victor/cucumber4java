@@ -16,7 +16,7 @@ import cucumber.api.junit.Cucumber;
 		glue = {"br.com.squadra.test.steps"},
 		tags = "@Run",
 		plugin = {"pretty", "html:target/report-html/", "json:target:report.json",
-				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:target/report-html/extent-report.html"},
+				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"},
 		monochrome = true,
 		snippets = SnippetType.CAMELCASE,
 		dryRun = false,
