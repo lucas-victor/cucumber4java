@@ -1,33 +1,45 @@
 package br.com.squadra.test.core;
 
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class DbManager {
-	
+
+	public static void main(String[] args) throws SQLException {
+		DbManager db = DbManager.getDbManagerSql();
+		//System.out.println(db.executaQueryWithResult("SELECT id, nome FROM produtos;"));
+		System.out.println(db.executaQueryWithResult("select * from produtos p\r\n" + 
+				"join vendas v on p.id = v.idProd;"));
+		
+	}
+
 	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_2020_06_17_08_04_23.BAK";
 	private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
-	private final static String SQL_BKP_PATH = "D:\\testBackupSql\\"; 
-	
+	private final static String SQL_BKP_PATH = "D:\\testBackupSql\\";
+
+	private final static String MIRROR_DBNAME_RESTORE_MYSQL = "meubkpluksdb.sql";
 	private final static String MYSQL_DUMP_PATH = "D:\\xampp\\mysql\\bin\\mysqldump.exe";
 	private final static String MYSQL_FOLDER_PATH = "D:\\xampp\\mysql\\bin\\mysql";
 	private final static String MYSQL_BKP_PATH = "D:\\dumpMySql\\";
-	private final static String MIRROR_DBNAME_RESTORE_MYSQL = "meubkpluksdb.sql";
-	
+
+
 	private String user = "sa";
 	private String pass = "123";
 	private String dbName = "DbLuksTest";
 	private String server = "localhost";
 	private String port = "1433";
 	private Connection con = null;
-	
-	
+
 	public DbManager() {
 	}
 
@@ -46,18 +58,19 @@ public class DbManager {
 	}
 
 	public static DbManager getDbManagerSql() {
-		//dados conexao db principal da automacao sqlServer
+		// dados conexao db principal da automacao sqlServer
 		return new DbManager("sa", "123", "DbLuksTest", "localhost", "1433");
 	}
-	
+
 	public static DbManager getDbManagerMySql() {
-		//dados conexao db mySql (bonus)
-		return new DbManager("root", "", "luksdb");		 
+		// dados conexao db mySql (bonus)
+		return new DbManager("root", "", "luksdb");
 	}
-	
+
 	public void backupDbSql() {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
-		String query = "BACKUP DATABASE "+ getDbName() +" TO DISK = '" + SQL_BKP_PATH + "LUKSDB_" + gerarNomeComData() + ".BAK'";
+		String query = "BACKUP DATABASE " + getDbName() + " TO DISK = '" + SQL_BKP_PATH + "LUKSDB_" + gerarNomeComData()
+				+ ".BAK'";
 		try {
 			con = conect.getConnectionSql();
 			PreparedStatement stmt = con.prepareStatement(query);
@@ -68,11 +81,12 @@ public class DbManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void restoreDbSql() {
 		Conect conect = new Conect(DBNAME_SUPPORT_RESTORE_SQL, getUser(), getPass(), getServer(), getPort());
 		String query1 = "ALTER DATABASE " + getDbName() + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
-		String query2 = "RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH + MIRROR_DBNAME_RESTORE_SQL + "' WITH REPLACE";
+		String query2 = "RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH + MIRROR_DBNAME_RESTORE_SQL
+				+ "' WITH REPLACE";
 		try {
 			con = conect.getConnectionSql();
 			PreparedStatement stmt = con.prepareStatement(query1);
@@ -85,7 +99,7 @@ public class DbManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void executaQuery(String query) {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		try {
@@ -93,54 +107,91 @@ public class DbManager {
 			PreparedStatement stmt = con.prepareStatement(query);
 			stmt.execute();
 			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}		
-	}
-	
-	public ResultSet executaQueryResultSet(String query) {
-		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
-		ResultSet rs = null;
-		try {
-			con = conect.getConnectionSql();
-			Statement stmt = con.createStatement();
-			rs = stmt.executeQuery(query);	
-			con.close();
+			System.out.println("query executada");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return rs;
+	}
+
+	public String executaQueryWithResult(String query) {
+		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
+		ResultSet rs = null;
+		String result = "";
+		try {
+			con = conect.getConnectionSql();
+			Statement stmt = con.createStatement();
+			rs = stmt.executeQuery(query);
+			result = getTextResultSet(rs);
+			con.close();
+			System.out.println("query executada");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
+	public String getTextResultSet(ResultSet rs) throws SQLException {
+		String result = "";
+		List<List> tabela = new ArrayList<List>();
+		List<String> lColunas = new ArrayList<String>();	
+		ResultSetMetaData meta = rs.getMetaData();
+		
+		for (int i = 1; i <= meta.getColumnCount(); i++) {
+			String nomeColunm = meta.getColumnName(i);
+			lColunas.add(nomeColunm);
+			//System.out.println("Column: " + lColunas.get(i-1));
+		}
+		tabela.add(lColunas);
+		
+		//int count = 1;
+		while (rs.next()) {
+			List<String> lValues = new ArrayList<String>();
+			for (int i = 1; i <= meta.getColumnCount(); i++) {
+				//System.out.println(rs.getString(i));
+				lValues.add(rs.getString(i));
+			}
+			tabela.add(lValues);
+		}
+		
+		String tabelaTexto = tabela.toString();
+		result = tabelaTexto
+				.replace("], ", "\n")
+				.replace("[", "")
+				.replace(",", "")
+				.replace("]]", "");
+
+		//System.out.println(tabelaTextoTratado);
+		return result;
+	}
+
 	public void printResultSet(ResultSet rs) {
-        try {
+		try {
 			while (rs.next()) {
-				//teste
-			    System.out.println(rs.getString("nome") + " " + rs.getString("descricao")+ " " + rs.getString("preco"));
+				// teste
+				System.out
+						.println(rs.getString("nome") + " " + rs.getString("descricao") + " " + rs.getString("preco"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-
 	public void backupDbMySql() {
-		String dump = "cmd.exe /c " + MYSQL_DUMP_PATH + " --user=" + getUser() + " --password=" + getPass() + " " + getDbName() + " > "
-				+ MYSQL_BKP_PATH + "bkpLuksDb" + gerarNomeComData() + ".sql";
+		String dump = "cmd.exe /c " + MYSQL_DUMP_PATH + " --user=" + getUser() + " --password=" + getPass() + " "
+				+ getDbName() + " > " + MYSQL_BKP_PATH + "bkpLuksDb" + gerarNomeComData() + ".sql";
 		Runtime bkp = Runtime.getRuntime();
 		try {
 			bkp.exec(dump);
 			System.out.println("Backup realizado!");
-			//System.out.println(dump);
+			// System.out.println(dump);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	
 	public void restoreDbMySql() {
-		String restauraBkp = "cmd.exe /c " + MYSQL_FOLDER_PATH + " --user=" + getUser() + " --password=" + getPass() + " "
-				+ getDbName() + " < " + MYSQL_BKP_PATH + MIRROR_DBNAME_RESTORE_MYSQL;
+		String restauraBkp = "cmd.exe /c " + MYSQL_FOLDER_PATH + " --user=" + getUser() + " --password=" + getPass()
+				+ " " + getDbName() + " < " + MYSQL_BKP_PATH + MIRROR_DBNAME_RESTORE_MYSQL;
 		try {
 			Runtime.getRuntime().exec(restauraBkp);
 			System.out.println("Banco restaurado!");
@@ -155,7 +206,6 @@ public class DbManager {
 		String s = sdf.format(c.getTime());
 		return s.replace("/", "_").replace(" ", "").replace(":", "_");
 	}
-
 
 	public String getUser() {
 		return user;
