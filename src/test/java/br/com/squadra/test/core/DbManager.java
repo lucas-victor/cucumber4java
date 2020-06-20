@@ -20,12 +20,10 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 
-import com.aventstack.extentreports.utils.FileUtil;
-
 public class DbManager {
-
-	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_2020_06_17_08_04_23.BAK";
-	private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
+	
+	//private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
+	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_19-06-2020_20.44.28.BAK";
 	private final static String SQL_BKP_PATH = "D:\\testBackupSql\\";
 
 	private final static String MIRROR_DBNAME_RESTORE_MYSQL = "meubkpluksdb.sql";
@@ -85,14 +83,15 @@ public class DbManager {
 		}
 	}
 
-	public void restoreDbSql() {
-		Conect conect = new Conect(DBNAME_SUPPORT_RESTORE_SQL, getUser(), getPass(), getServer(), getPort());
-		String query1 = "ALTER DATABASE " + getDbName() + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
-		String query2 = "RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH + MIRROR_DBNAME_RESTORE_SQL
+	public void restoreDbSql() { //DBNAME_SUPPORT_RESTORE_SQL
+		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
+		String query1 = "Use master ALTER DATABASE " + getDbName() + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
+		String query2 = "Use master RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH + MIRROR_DBNAME_RESTORE_SQL
 				+ "' WITH REPLACE";
+		PreparedStatement stmt;
 		try {
 			con = conect.getConnectionSql();
-			PreparedStatement stmt = con.prepareStatement(query1);
+			stmt = con.prepareStatement(query1);
 			stmt.execute();
 			stmt = con.prepareStatement(query2);
 			stmt.execute();
@@ -105,9 +104,10 @@ public class DbManager {
 
 	public void executeQuery(String query) {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
+		PreparedStatement stmt;
 		try {
 			con = conect.getConnectionSql();
-			PreparedStatement stmt = con.prepareStatement(query);
+			stmt = con.prepareStatement(query);
 			stmt.execute();
 			con.close();
 			System.out.println("query executada");
@@ -155,25 +155,25 @@ public class DbManager {
 
 	public String getTextResultSet(ResultSet rs) throws SQLException {
 		String result = "";
-		List<List> tabela = new ArrayList<List>();
-		List<String> lColunas = new ArrayList<String>();
+		List<List> table = new ArrayList<List>();
+		List<String> columnNames = new ArrayList<String>();
 		ResultSetMetaData meta = rs.getMetaData();
 
 		for (int i = 1; i <= meta.getColumnCount(); i++) {
 			String nomeColunm = meta.getColumnName(i);
-			lColunas.add(nomeColunm);
+			columnNames.add(nomeColunm);
 		}
-		tabela.add(lColunas);
+		table.add(columnNames);
 
 		while (rs.next()) {
-			List<String> lValues = new ArrayList<String>();
+			List<String> values = new ArrayList<String>();
 			for (int i = 1; i <= meta.getColumnCount(); i++) {
-				lValues.add(rs.getString(i));
+				values.add(rs.getString(i));
 			}
-			tabela.add(lValues);
+			table.add(values);
 		}
 
-		String tabelaTexto = tabela.toString();
+		String tabelaTexto = table.toString();
 		result = tabelaTexto
 				.replace("], ", "\n")
 				.replace("[", "")
@@ -217,9 +217,7 @@ public class DbManager {
 		try {
 			if (FileUtils.contentEquals(file1, file2)) {
 				return true;
-			} else {
-				return false;
-			}
+			} 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -242,7 +240,6 @@ public class DbManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return file;
 	}
 

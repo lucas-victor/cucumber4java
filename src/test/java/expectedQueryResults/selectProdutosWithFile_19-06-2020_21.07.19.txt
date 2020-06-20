@@ -4,3 +4,4 @@ id nome descricao preco
 9 bicicleta bicicleta caloi 125.9
 10 test3 test3 2.0
 11 teste4 teste4 125.9
+12 teste7 teste7 40.0
