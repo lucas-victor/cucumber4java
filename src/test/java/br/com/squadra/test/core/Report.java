@@ -70,6 +70,7 @@ public class Report {
 		 */
 		
 		//writeReport("Imagem adicionada no relatorio: " + ImageName);
+		
 		addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 	}
 	//print tela e salva relatorio - string
@@ -114,7 +115,7 @@ public class Report {
 		ExtentCucumberAdapter.addTestStepLog(msg);
 	}
 	//adiciona imagem relatorio
-	public void addImageReport(String imageName) throws IOException {
+	private void addImageReport(String imageName) throws IOException {
 		ExtentCucumberAdapter.addTestStepScreenCaptureFromPath(imageName);
 	}
 	
@@ -199,13 +200,11 @@ public class Report {
 		File pasta5 = new File(REPORT_FOLDER);
 		
 		System.out.println("Limpando pastas de arquivos...");
-
 		deleteAndCreateFileDirs(pasta5);
 		deleteAndCreateFileDirs(pasta4);
 		deleteAndCreateFileDirs(pasta3);
 		deleteAndCreateFileDirs(pasta2);
 		deleteAndCreateFileDirs(pasta1);
-	
 		System.out.println("Arquivos deletados! \n");
 	}
 	//deleta arquivos
@@ -218,7 +217,7 @@ public class Report {
 		}
 	}
 	//deleta e recria diretorios
-	public void deleteAndCreateFileDirs(File file) {
+	private void deleteAndCreateFileDirs(File file) {
 		if (file.exists()) {
 			deleteFiles(file);
 			file.mkdir();
