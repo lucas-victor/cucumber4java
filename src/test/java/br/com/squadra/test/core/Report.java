@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.exec.OS;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -31,7 +32,9 @@ public class Report {
 	private final static String RELATIVE_SCREENSHOT_PATH = "screenShot/";
 	private final static String REPORT_CONFIG = System.getProperty("user.dir") + "\\src\\test\\resources\\configs\\extent-config.xml";
 	private final static String SOURCE_FOLDER_ZIP = System.getProperty("user.dir") + "\\target\\report-html";
+	private final static String SOURCE_FOLDER_ZIP_LINUX = System.getProperty("user.dir") + "//target//report-html";
 	private final static String REPORT_PATH = System.getProperty("user.dir") + "\\target\\report-html\\";
+	private final static String REPORT_PATH_LINUX = System.getProperty("user.dir") + "//target//report-html//";
 	
 	private final static String SCREENSHOT_FOLDER = System.getProperty("user.dir") + "/target/report-html/screenShot";
 	private final static String QUERY_FOLDER_ACT = System.getProperty("user.dir") + "/target/report-html/actualQueryResults"; 
@@ -39,6 +42,13 @@ public class Report {
 	private final static String LOGGER_FOLDER = System.getProperty("user.dir") + "/target/report-html/logger";
 	private final static String SPARK_FOLDER = System.getProperty("user.dir") + "/target/report-html/spark";
 	private final static String REPORT_FOLDER = System.getProperty("user.dir") + "/target/report-html";
+	
+	private final static String SCREENSHOT_FOLDER_LINUX = System.getProperty("user.dir") + "//target//report-html//screenShot";
+	private final static String QUERY_FOLDER_ACT_LINUX = System.getProperty("user.dir") + "//target//report-html//actualQueryResults"; 
+	private final static String QUERY_FOLDER_EXP_LINUX = System.getProperty("user.dir") + "//src//test//java//expectedQueryResults";
+	private final static String LOGGER_FOLDER_LINUX = System.getProperty("user.dir") + "//target//report-html//logger";
+	private final static String SPARK_FOLDER_LINUX = System.getProperty("user.dir") + "//target//report-html//spark";
+	private final static String REPORT_FOLDER_LINUX = System.getProperty("user.dir") + "//target//report-html";
 	
 	private TakesScreenshot ss;
 	private Scenario scenario;
@@ -128,16 +138,36 @@ public class Report {
 
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy-HH.mm.ss");
-
-		String nomeDir = System.getProperty("user.dir") + "\\target\\report-html-" + dateFormat.format(date);
+		String osname = System.getProperty("os.name");
+		String nomeDir = "";
+		if (osname.equalsIgnoreCase("windows")) {
+			nomeDir = System.getProperty("user.dir") + "\\target\\report-html-" + dateFormat.format(date);
+		}
+		else {
+			nomeDir = System.getProperty("user.dir") + "//target//report-html-" + dateFormat.format(date);
+		}
+		
 		new File(nomeDir).mkdir();
-
-		File reportDir = new File(REPORT_PATH);
+		
+		File reportDir = null;
+		if (osname.equalsIgnoreCase("windows")) {
+			reportDir = new File(REPORT_PATH);
+		}else {
+			reportDir = new File(REPORT_PATH_LINUX);
+		}
+		
 		
 		if (reportDir.exists()) {
-			String srcFolder = SOURCE_FOLDER_ZIP;
-			String destZipFile = nomeDir + "\\report-html-" + dateFormat.format(date) + ".zip";
-
+			String srcFolder = "";
+			String destZipFile = "";
+			if (osname.equalsIgnoreCase("windows")) {
+				srcFolder = SOURCE_FOLDER_ZIP;
+				destZipFile = nomeDir + "\\report-html-" + dateFormat.format(date) + ".zip";
+			}
+			else {
+				srcFolder = SOURCE_FOLDER_ZIP_LINUX;
+				destZipFile = nomeDir + "//report-html-" + dateFormat.format(date) + ".zip";
+			}
 			ZipOutputStream zip = null;
 			FileOutputStream fileWriter = null;
 
@@ -165,13 +195,19 @@ public class Report {
 	private void addFileToZip(String path, String srcFile, ZipOutputStream zip) throws Exception {
 
 		File folder = new File(srcFile);
+		String osname = System.getProperty("os.name");
+		
 		if (folder.isDirectory()) {
 			addFolderToZip(path, srcFile, zip);
 		} else {
 			byte[] buf = new byte[1024];
 			int len;
 			FileInputStream in = new FileInputStream(srcFile);
-			zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
+			if (osname.equalsIgnoreCase("windows")) {
+				zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
+			}else {
+				zip.putNextEntry(new ZipEntry(path + "//" + folder.getName()));
+			}
 			while ((len = in.read(buf)) > 0) {
 				zip.write(buf, 0, len);
 			}
@@ -181,23 +217,48 @@ public class Report {
 
 	private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip) throws Exception {
 		File folder = new File(srcFolder);
-
+		String osname = System.getProperty("os.name");
+		
 		for (String fileName : folder.list()) {
 			if (path.equals("")) {
-				addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
+				if (osname.equalsIgnoreCase("windows")) {
+					addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
+				}else {
+					addFileToZip(folder.getName(), srcFolder + "//" + fileName, zip);
+				}				
 			} else {
-				addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
+				if (osname.equalsIgnoreCase("windows")) {
+					addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
+				}
+				else {
+					addFileToZip(path + "//" + folder.getName(), srcFolder + "//" + fileName, zip);
+				}
 			}
 		}
 	}
+	
 	//limpa pasta de relatorios
 	public void limparPastas() {
-
-		File pasta1 = new File(SCREENSHOT_FOLDER);
-		File pasta2 = new File(QUERY_FOLDER_ACT);
-		File pasta3 = new File(LOGGER_FOLDER);
-		File pasta4 = new File(SPARK_FOLDER);
-		File pasta5 = new File(REPORT_FOLDER);
+		String osname = System.getProperty("os.name");
+		File pasta1 = null;
+		File pasta2 = null;
+		File pasta3 = null;
+		File pasta4 = null;
+		File pasta5 = null;
+		
+		if (osname.toLowerCase().contains("windows")) {
+			pasta1 = new File(SCREENSHOT_FOLDER);
+			pasta2 = new File(QUERY_FOLDER_ACT);
+			pasta3 = new File(LOGGER_FOLDER);
+			pasta4 = new File(SPARK_FOLDER);
+			pasta5 = new File(REPORT_FOLDER);
+		}else {
+			pasta1 = new File(SCREENSHOT_FOLDER_LINUX);
+			pasta2 = new File(QUERY_FOLDER_ACT_LINUX);
+			pasta3 = new File(LOGGER_FOLDER_LINUX);
+			pasta4 = new File(SPARK_FOLDER_LINUX);
+			pasta5 = new File(REPORT_FOLDER_LINUX);
+		}
 		
 		System.out.println("Limpando pastas de arquivos...");
 		deleteAndCreateFileDirs(pasta5);

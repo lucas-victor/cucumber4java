@@ -21,10 +21,17 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 
 public class DbManager {
+	
+	public static void main (String[] args) {
+		DbManager db = DbManager.getDbManagerSql();
+		db.executeQueryWithResultFile("testeLinux", "select * from produtos");
+		
+	}
 		
 	//private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
 	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_19-06-2020_20.44.28.BAK";
 	private final static String SQL_BKP_PATH = "D:\\testBackupSql\\";
+	private final static String SQL_BKP_PATH_LINUX = "//home//luks//testBackupSql//";
 
 	private final static String MIRROR_DBNAME_RESTORE_MYSQL = "meubkpluksdb.sql";
 	private final static String MYSQL_DUMP_PATH = "D:\\xampp\\mysql\\bin\\mysqldump.exe";
@@ -33,6 +40,8 @@ public class DbManager {
 
 	private final static String QUERY_ACTUAL_RESULT_PATH = "target/report-html/actualQueryResults/";
 	private final static String QUERY_EXPECTED_RESULT_PATH = "src/test/java/expectedQueryResults/";
+	private final static String QUERY_ACTUAL_RESULT_PATH_LINUX = "target//report-html//actualQueryResults//";
+	private final static String QUERY_EXPECTED_RESULT_PATH_LINUX = "src//test//java//expectedQueryResults//";
 
 	private String user = "sa";
 	private String pass = "123";
@@ -60,7 +69,8 @@ public class DbManager {
 	//instancia do sql server.
 	public static DbManager getDbManagerSql() {
 		// dados conexao db principal da automacao sqlServer
-		return new DbManager("sa", "123", "DbLuksTest", "localhost", "1433");
+		//return new DbManager("sa", "123", "DbLuksTest", "localhost", "1433");
+		return new DbManager("sa", "Lav150516", "DbLuksTest", "localhost", "1433");
 	}
 	//instancia do mysql
 	public static DbManager getDbManagerMySql() {
@@ -70,8 +80,15 @@ public class DbManager {
 	//faz backup da base de dados
 	public void backupDbSql() {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
-		String query = "BACKUP DATABASE " + getDbName() + " TO DISK = '" + SQL_BKP_PATH + "LUKSDB_" + gerarNomeComData()
+		String query = "";
+		String osname = System.getProperty("os.name");
+		if (osname.equalsIgnoreCase("windows")) {
+			query = "BACKUP DATABASE " + getDbName() + " TO DISK = '" + SQL_BKP_PATH + "LUKSDB_" + gerarNomeComData()
 				+ ".BAK'";
+		}else {
+			query = "BACKUP DATABASE " + getDbName() + " TO DISK = '" + SQL_BKP_PATH_LINUX + "LUKSDB_" + gerarNomeComData()
+			+ ".BAK'";
+		}
 		try {
 			con = conect.getConnectionSql();
 			PreparedStatement stmt = con.prepareStatement(query);
@@ -86,8 +103,16 @@ public class DbManager {
 	public void restoreDbSql() { //DBNAME_SUPPORT_RESTORE_SQL
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		String query1 = "Use master ALTER DATABASE " + getDbName() + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
-		String query2 = "Use master RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH + MIRROR_DBNAME_RESTORE_SQL
+		String query2 = "";
+		
+		String osname = System.getProperty("os.name");
+		if (osname.equalsIgnoreCase("windows")) {
+			query2 = "Use master RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH + MIRROR_DBNAME_RESTORE_SQL
 				+ "' WITH REPLACE";
+		}else {
+			query2 = "Use master RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH_LINUX + MIRROR_DBNAME_RESTORE_SQL
+					+ "' WITH REPLACE";
+		}
 		PreparedStatement stmt;
 		try {
 			con = conect.getConnectionSql();
@@ -188,8 +213,13 @@ public class DbManager {
 	//salva arquivo com o texto passado.
 	public String writeFileResult(String fileName, String text) {
 		String newFileName = fileName + "_" + gerarNomeComData() + ".txt";
-		String fullNameArq = QUERY_ACTUAL_RESULT_PATH + newFileName;
-		
+		String fullNameArq = "";
+		String osname = System.getProperty("os.name");
+		if (osname.equalsIgnoreCase("windows")) {
+			fullNameArq = QUERY_ACTUAL_RESULT_PATH + newFileName;
+		}else {
+			fullNameArq = QUERY_ACTUAL_RESULT_PATH_LINUX + newFileName;
+		}
 		try {
 			FileWriter arq = new FileWriter(fullNameArq);
 			PrintWriter gravaArq = new PrintWriter(arq);
@@ -204,10 +234,17 @@ public class DbManager {
 	}
 	//valida se 2 arquivos são iguais.
 	public void assertTwoFilesResults(String fileNameExp, String fileNameAct) {
-
-		String expFilePath = QUERY_EXPECTED_RESULT_PATH + fileNameExp;
-		String actFilePath = QUERY_ACTUAL_RESULT_PATH + fileNameAct;
-
+		String expFilePath = ""; 
+		String actFilePath = "";
+		String osname = System.getProperty("os.name");
+		if (osname.equalsIgnoreCase("windows")) {
+			expFilePath = QUERY_EXPECTED_RESULT_PATH + fileNameExp;
+			actFilePath = QUERY_ACTUAL_RESULT_PATH + fileNameAct;
+		}else {
+			expFilePath = QUERY_EXPECTED_RESULT_PATH_LINUX + fileNameExp;
+			actFilePath = QUERY_ACTUAL_RESULT_PATH_LINUX + fileNameAct;
+		}
+		
 		File fileExp = new File(expFilePath);
 		File fileAct = new File(actFilePath);
 		

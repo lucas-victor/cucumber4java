@@ -1,0 +1,254 @@
+[
+  {
+    "line": 3,
+    "elements": [
+      {
+        "line": 5,
+        "name": "",
+        "description": "",
+        "type": "background",
+        "keyword": "Background",
+        "steps": [
+          {
+            "result": {
+              "duration": 3033195836,
+              "status": "passed"
+            },
+            "line": 6,
+            "name": "que acesso o site do google",
+            "match": {
+              "location": "StepDefinition.acessoOpen()"
+            },
+            "keyword": "Given "
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2020-06-21T17:15:17.249Z",
+        "before": [
+          {
+            "result": {
+              "duration": 813831698,
+              "status": "passed"
+            },
+            "match": {
+              "location": "TestRule.iniciliazarCenario(Scenario)"
+            }
+          }
+        ],
+        "line": 10,
+        "name": "Acesso site GloboEsporte",
+        "description": "",
+        "id": "pesquisa-no-google;acesso-site-globoesporte",
+        "after": [
+          {
+            "result": {
+              "duration": 178796296,
+              "status": "passed"
+            },
+            "match": {
+              "location": "TestRule.fecharBrowser(Scenario)"
+            }
+          }
+        ],
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 2732170895,
+              "status": "passed"
+            },
+            "line": 11,
+            "name": "pesquiso pelo site \"https://www.globo.com/\"",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"https://www.globo.com/\"",
+                  "offset": 19
+                }
+              ],
+              "location": "StepDefinition.pesquisoSiteLancenet(String)"
+            },
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "duration": 12306801067,
+              "status": "passed"
+            },
+            "line": 12,
+            "name": "acesso o primeiro site retornado do globo",
+            "match": {
+              "location": "StepDefinition.acessoPrimeiroSiteRetornadoGlobo()"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 1648556896,
+              "status": "passed"
+            },
+            "line": 13,
+            "name": "clico no link para o GloboEsporte",
+            "match": {
+              "location": "StepDefinition.clicoLinkGloboEsporte()"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 44503649,
+              "status": "passed"
+            },
+            "line": 14,
+            "name": "valido o logo do site Globo Esporte",
+            "match": {
+              "location": "StepDefinition.validoConteudoTituloGloboEsporte()"
+            },
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@Google"
+          },
+          {
+            "name": "@Run"
+          }
+        ]
+      },
+      {
+        "line": 5,
+        "name": "",
+        "description": "",
+        "type": "background",
+        "keyword": "Background",
+        "steps": [
+          {
+            "result": {
+              "duration": 2970394700,
+              "status": "passed"
+            },
+            "line": 6,
+            "name": "que acesso o site do google",
+            "match": {
+              "location": "StepDefinition.acessoOpen()"
+            },
+            "keyword": "Given "
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2020-06-21T17:15:38.037Z",
+        "before": [
+          {
+            "result": {
+              "duration": 400400462,
+              "status": "passed"
+            },
+            "match": {
+              "location": "TestRule.iniciliazarCenario(Scenario)"
+            }
+          }
+        ],
+        "line": 17,
+        "name": "Acesso site Folha de São Paulo",
+        "description": "",
+        "id": "pesquisa-no-google;acesso-site-folha-de-são-paulo",
+        "after": [
+          {
+            "result": {
+              "duration": 240773028,
+              "status": "passed"
+            },
+            "match": {
+              "location": "TestRule.fecharBrowser(Scenario)"
+            }
+          }
+        ],
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 2085759353,
+              "status": "passed"
+            },
+            "line": 18,
+            "name": "pesquiso pelo site \"https://www.uol.com.br/\"",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"https://www.uol.com.br/\"",
+                  "offset": 19
+                }
+              ],
+              "location": "StepDefinition.pesquisoSiteLancenet(String)"
+            },
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "duration": 8563567845,
+              "status": "passed"
+            },
+            "line": 19,
+            "name": "acesso o primeiro site retornado do UOL",
+            "match": {
+              "location": "StepDefinition.acessoPrimeiroSiteRetornadoUOL()"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 7606634870,
+              "status": "passed"
+            },
+            "line": 20,
+            "name": "clico no link para a Folha de São Paulo",
+            "match": {
+              "location": "StepDefinition.clicoLinkFolha()"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 176152278,
+              "status": "passed"
+            },
+            "line": 21,
+            "name": "valido a existência do link Mundo",
+            "match": {
+              "location": "StepDefinition.validoLinkMundo()"
+            },
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@Google"
+          },
+          {
+            "name": "@Run"
+          }
+        ]
+      }
+    ],
+    "name": "Pesquisa no google",
+    "description": "",
+    "id": "pesquisa-no-google",
+    "keyword": "Feature",
+    "uri": "file:src/test/resources/features/Google.feature",
+    "tags": [
+      {
+        "name": "@Google",
+        "type": "Tag",
+        "location": {
+          "line": 1,
+          "column": 1
+        }
+      }
+    ]
+  }
+]
