@@ -32,7 +32,7 @@ public class TestRule {
 
 		// Configurar a string de conexão com o banco de dados SqlServer.
 		// Gera backup do banco ao final de cada teste.
-		// db.backupDbSql();
+		 db.backupDbSql();
 	}
 
 	@Before

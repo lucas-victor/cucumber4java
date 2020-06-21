@@ -21,17 +21,11 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 
 public class DbManager {
-	
-	public static void main (String[] args) {
-		DbManager db = DbManager.getDbManagerSql();
-		db.executeQueryWithResultFile("testeLinux", "select * from produtos");
-		
-	}
 		
 	//private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
 	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_19-06-2020_20.44.28.BAK";
 	private final static String SQL_BKP_PATH = "D:\\testBackupSql\\";
-	private final static String SQL_BKP_PATH_LINUX = "//home//luks//testBackupSql//";
+	private final static String SQL_BKP_PATH_LINUX = "/home/luks/testBackupSql/";
 
 	private final static String MIRROR_DBNAME_RESTORE_MYSQL = "meubkpluksdb.sql";
 	private final static String MYSQL_DUMP_PATH = "D:\\xampp\\mysql\\bin\\mysqldump.exe";
@@ -69,8 +63,8 @@ public class DbManager {
 	//instancia do sql server.
 	public static DbManager getDbManagerSql() {
 		// dados conexao db principal da automacao sqlServer
-		//return new DbManager("sa", "123", "DbLuksTest", "localhost", "1433");
-		return new DbManager("sa", "Lav150516", "DbLuksTest", "localhost", "1433");
+		return new DbManager("sa", "123", "DbLuksTest", "localhost", "1433");
+		//return new DbManager("sa", "Lav150516", "DbLuksTest", "localhost", "1433");
 	}
 	//instancia do mysql
 	public static DbManager getDbManagerMySql() {

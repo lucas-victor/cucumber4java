@@ -39,10 +39,10 @@ public class StepDefinition {
 		report.getScreenShot("testeAcessoGoogle");
 
 		// Executa query, imprime no relatorio nome e conteudo do arquivo.
-		String fileName = db.executeQueryWithResultFile("selectAll", "select * from produtos");
+		//String fileName = db.executeQueryWithResultFile("selectAll", "select * from produtos");
 		
 		// escreve no relatorio o conteudo do arquivo salvo no diretorio.
-		report.writeReportSql(fileName);
+		//report.writeReportSql(fileName);
 		
 		//faz assert dos 2 arquivos, esperado e atual.
 		//db.assertTwoFilesResults("selectAll_21-06-2020_00.50.54.txt", fileName);
@@ -56,9 +56,9 @@ public class StepDefinition {
 		report.getScreenShot("testePesquisaSite");
 		
 		// executa query e retorna resultado em string
-		String resultSql = db.executeQueryGetResult("select descricao from produtos");
+		//String resultSql = db.executeQueryGetResult("select descricao from produtos");
 
-		report.writeReport(resultSql);
+		//report.writeReport(resultSql);
 	}
 
 	@Then("acesso o primeiro site retornado do globo")
@@ -67,10 +67,10 @@ public class StepDefinition {
 		report.getScreenShot("testeAcessoSite");
 
 		// Executa query e salva o arquivo na pasta do relatorio
-		String fileName = db.executeQueryWithResultFile("SelNomePreco", "select nome, preco from produtos");
+		//String fileName = db.executeQueryWithResultFile("SelNomePreco", "select nome, preco from produtos");
 		
 		// escreve no relatorio o conteudo do arquivo salvo no diretorio.
-		report.writeReportSql(fileName);
+		//report.writeReportSql(fileName);
 		
 		//faz assert dos 2 arquivos, esperado e atual.
 		//db.assertTwoFilesResults("SelNomePreco_21-06-2020_00.41.48.txt", fileName);
@@ -92,10 +92,10 @@ public class StepDefinition {
 		report.getScreenShot("testeAcessoGloboEsporte");
 
 		// Executa query e salva o arquivo na pasta do relatorio
-		String fileName = db.executeQueryWithResultFile("SelIdPreco", "select id, nome from produtos");
+		//String fileName = db.executeQueryWithResultFile("SelIdPreco", "select id, nome from produtos");
 		
 		// escreve no relatorio o conteudo do arquivo salvo no diretorio.
-		report.writeReportSql(fileName);
+		//report.writeReportSql(fileName);
 		
 		//faz assert dos 2 arquivos, esperado e atual.
 		//db.assertTwoFilesResults("SelIdPreco_21-06-2020_00.41.54.txt", fileName);
