@@ -2,10 +2,12 @@ package br.com.squadra.test.core;
 
 import static br.com.squadra.test.core.DriverFactory.getDriver;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,13 +31,14 @@ public class Report {
 	private final static String RELATIVE_SCREENSHOT_PATH = "screenShot/";
 	private final static String REPORT_CONFIG = System.getProperty("user.dir") + "\\src\\test\\resources\\configs\\extent-config.xml";
 	private final static String SOURCE_FOLDER_ZIP = System.getProperty("user.dir") + "\\target\\report-html";
-	private final static String REPORT_FOLDER = System.getProperty("user.dir") + "\\target\\report-html\\";
+	private final static String REPORT_PATH = System.getProperty("user.dir") + "\\target\\report-html\\";
 	
-	private final static String SCREENSHOT_FULLPATH = System.getProperty("user.dir") + "/target/report-html/screenShot";
-	private final static String QUERY_FULLPATH = System.getProperty("user.dir") + "/target/report-html/actualQueryResults"; 
-	private final static String LOGGER_FULLPATH = System.getProperty("user.dir") + "/target/report-html/logger";
-	private final static String SPARK_FULLPATH = System.getProperty("user.dir") + "/target/report-html/spark";
-	private final static String REPORT_FULLPATH = System.getProperty("user.dir") + "/target/report-html";
+	private final static String SCREENSHOT_FOLDER = System.getProperty("user.dir") + "/target/report-html/screenShot";
+	private final static String QUERY_FOLDER_ACT = System.getProperty("user.dir") + "/target/report-html/actualQueryResults"; 
+	private final static String QUERY_FOLDER_EXP = System.getProperty("user.dir") + "/src/test/java/expectedQueryResults";
+	private final static String LOGGER_FOLDER = System.getProperty("user.dir") + "/target/report-html/logger";
+	private final static String SPARK_FOLDER = System.getProperty("user.dir") + "/target/report-html/spark";
+	private final static String REPORT_FOLDER = System.getProperty("user.dir") + "/target/report-html";
 	
 	private TakesScreenshot ss;
 	private Scenario scenario;
@@ -50,7 +53,7 @@ public class Report {
 	public static Report getReport() {
 		return new Report();
 	}
-	
+	//print tela e salva relatorio - scenario
 	public void getScreenShot(Scenario cenario) throws IOException {
 		this.ss = (TakesScreenshot) getDriver();
 		this.scenario = cenario;
@@ -69,7 +72,7 @@ public class Report {
 		//writeReport("Imagem adicionada no relatorio: " + ImageName);
 		addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 	}
-	
+	//print tela e salva relatorio - string
 	public void getScreenShot(String printName) {
 		this.ss = (TakesScreenshot) getDriver();
 		File arquivo = ss.getScreenshotAs(OutputType.FILE);
@@ -86,10 +89,31 @@ public class Report {
 		
 	}
 	
+	//escreve conteudo do arquivo de resultado da query no relatorio.
+	public void writeReportSql(String resultFileName) {
+		String fullFilePath = QUERY_FOLDER_ACT + "/" + resultFileName ;
+		BufferedReader buffRead;
+		String linha = "";
+		try {
+			buffRead = new BufferedReader(new FileReader(fullFilePath));
+			while (true) {
+				if (linha != null) {
+					//System.out.println(linha);
+					writeReport(linha);
+				} else
+					break;
+				linha = buffRead.readLine();
+			}
+			buffRead.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	//escreve no relatorio
 	public void writeReport(String msg) {
 		ExtentCucumberAdapter.addTestStepLog(msg);
 	}
-	
+	//adiciona imagem relatorio
 	public void addImageReport(String imageName) throws IOException {
 		ExtentCucumberAdapter.addTestStepScreenCaptureFromPath(imageName);
 	}
@@ -98,7 +122,7 @@ public class Report {
 		return this.scenario;
 	}
 	
-	
+	//faz backup da pasta de relatorio zip 
 	public void zipFolder()  {
 
 		Date date = new Date();
@@ -107,7 +131,7 @@ public class Report {
 		String nomeDir = System.getProperty("user.dir") + "\\target\\report-html-" + dateFormat.format(date);
 		new File(nomeDir).mkdir();
 
-		File reportDir = new File(REPORT_FOLDER);
+		File reportDir = new File(REPORT_PATH);
 		
 		if (reportDir.exists()) {
 			String srcFolder = SOURCE_FOLDER_ZIP;
@@ -165,61 +189,41 @@ public class Report {
 			}
 		}
 	}
-
+	//limpa pasta de relatorios
 	public void limparPastas() {
 
-		File pasta1 = new File(SCREENSHOT_FULLPATH);
-		File pasta2 = new File(QUERY_FULLPATH);
-		File pasta3 = new File(LOGGER_FULLPATH);
-		File pasta4 = new File(SPARK_FULLPATH);
-		File pasta5 = new File(REPORT_FULLPATH);
+		File pasta1 = new File(SCREENSHOT_FOLDER);
+		File pasta2 = new File(QUERY_FOLDER_ACT);
+		File pasta3 = new File(LOGGER_FOLDER);
+		File pasta4 = new File(SPARK_FOLDER);
+		File pasta5 = new File(REPORT_FOLDER);
 		
 		System.out.println("Limpando pastas de arquivos...");
-		if (pasta5.exists()) {
-			deleteFiles(pasta5);
-			pasta5.mkdir();
-		}
-		else {
-			pasta5.mkdir();
-		}
-		
-		if (pasta4.exists()) {
-			deleteFiles(pasta4);
-			pasta4.mkdir();
-		}
-		else {
-			pasta4.mkdir();
-		}
 
-		if (pasta3.exists()) {
-			deleteFiles(pasta3);
-			pasta3.mkdir();
-		}else {
-			pasta3.mkdir();
-		}
-		
-		if (pasta2.exists()) {
-			deleteFiles(pasta2);
-			pasta2.mkdir();
-		}else {
-			pasta2.mkdir();
-		}
-		
-		if (pasta1.exists()) {
-			deleteFiles(pasta1);
-			pasta1.mkdir();
-		}else {
-			pasta1.mkdir();
-		}
+		deleteAndCreateFileDirs(pasta5);
+		deleteAndCreateFileDirs(pasta4);
+		deleteAndCreateFileDirs(pasta3);
+		deleteAndCreateFileDirs(pasta2);
+		deleteAndCreateFileDirs(pasta1);
+	
 		System.out.println("Arquivos deletados! \n");
 	}
-	
+	//deleta arquivos
 	private void deleteFiles(File file) {
 		File[] files = file.listFiles();
 		for (File file1 : files) {
 			
 			file1.setWritable(true);
 			file1.delete();
+		}
+	}
+	//deleta e recria diretorios
+	public void deleteAndCreateFileDirs(File file) {
+		if (file.exists()) {
+			deleteFiles(file);
+			file.mkdir();
+		}else {
+			file.mkdir();
 		}
 	}
 }

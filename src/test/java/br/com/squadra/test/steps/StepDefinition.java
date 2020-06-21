@@ -12,6 +12,7 @@ import br.com.squadra.test.pages.GloboesportePage;
 import br.com.squadra.test.pages.HomePage;
 import br.com.squadra.test.pages.LoginPage;
 import br.com.squadra.test.pages.UolPage;
+import cucumber.api.Scenario;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -23,19 +24,27 @@ public class StepDefinition {
 	private UolPage uolPage = new UolPage();
 	private GloboPage globoPage = new GloboPage();
 	private GloboesportePage globoesportePage = new GloboesportePage();
-	private FolhaPage folhaPage = new FolhaPage();	
+	private FolhaPage folhaPage = new FolhaPage();
 	private Report report = new Report();
 	private TestRule tr = new TestRule();
 	private DbManager db = DbManager.getDbManagerSql();
 
-	
 	@Given("que acesso o site do google")
 	public void acessoOpen() throws IOException {
 		loginPage.acessarPaginaPrincipal();
 
+		// escreve no relatorio
 		report.writeReport("Teste google acesso write...");
+		// tira screeshot da tela e salvo o print em arquivo e insere no relatorio
 		report.getScreenShot("testeAcessoGoogle");
+
+		// Executa query, imprime no relatorio nome e conteudo do arquivo.
+		String fileName = db.executeQueryWithResultFile("selectAll", "select * from produtos");
+		// escreve no relatorio o conteudo do arquivo salvo no diretorio.
+		report.writeReportSql(fileName);
 		
+		db.assertTwoFilesResults("selectAll_21-06-2020_00.50.54.txt", fileName);
+
 	}
 
 	@When("pesquiso pelo site {string}")
@@ -43,39 +52,54 @@ public class StepDefinition {
 		homePage.pesquisarSiteLancenet(site);
 		report.writeReport("Teste pesquiso pelo site...");
 		report.getScreenShot("testePesquisaSite");
+		
+		String resultSql = db.executeQueryGetResult("select descricao from produtos");
+		report.writeReport(resultSql);
 	}
 
 	@Then("acesso o primeiro site retornado do globo")
 	public void acessoPrimeiroSiteRetornadoGlobo() {
 		homePage.acessarPrimeiroSiteRetornadoGlobo();
-		report.writeReport("Teste acesso o primeiro site retornado...");
 		report.getScreenShot("testeAcessoSite");
+
+		// Executa query e salva o arquivo na pasta do relatorio
+		String fileName = db.executeQueryWithResultFile("SelNomePreco", "select nome, preco from produtos");
+		// escreve no relatorio o conteudo do arquivo salvo no diretorio.
+		report.writeReportSql(fileName);
+		//faz assert dos 2 arquivos, esperado e atual.
+		db.assertTwoFilesResults("SelNomePreco_21-06-2020_00.41.48.txt", fileName);
 	}
 
 	@When("acesso o primeiro site retornado do UOL")
 	public void acessoPrimeiroSiteRetornadoUOL() {
-		 homePage.acessarPrimeiroSiteRetornadoUOL();
+		homePage.acessarPrimeiroSiteRetornadoUOL();
 	}
 
 	@When("clico no link para o GloboEsporte")
 	public void clicoLinkGloboEsporte() {
-		 globoPage.clicarLinkGloboesporte();
-		 report.writeReport("Teste acesso GloboEsporte...");
-		 report.getScreenShot("testeAcessoGloboEsporte");
+		globoPage.clicarLinkGloboesporte();
+		report.getScreenShot("testeAcessoGloboEsporte");
+
+		// Executa query e salva o arquivo na pasta do relatorio
+		String fileName = db.executeQueryWithResultFile("SelIdPreco", "select id, nome from produtos");
+		// escreve no relatorio o conteudo do arquivo salvo no diretorio.
+		report.writeReportSql(fileName);
+		//faz assert dos 2 arquivos, esperado e atual.
+		db.assertTwoFilesResults("SelIdPreco_21-06-2020_00.41.54.txt", fileName);
 	}
 
 	@When("clico no link para a Folha de São Paulo")
 	public void clicoLinkFolha() {
-		 uolPage.clicarLinkFolha();
+		uolPage.clicarLinkFolha();
 	}
 
 	@Then("valido o logo do site Globo Esporte")
 	public void validoConteudoTituloGloboEsporte() {
-		 globoesportePage.validarConteudoTitulo();
+		globoesportePage.validarConteudoTitulo();
 	}
 
 	@Then("valido a existência do link Mundo")
 	public void validoLinkMundo() {
-		 folhaPage.validarLinkMundo();
+		folhaPage.validarLinkMundo();
 	}
 }

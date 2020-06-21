@@ -1,0 +1,7 @@
+nome preco
+bola 5.9
+tenis 40.0
+bicicleta 125.9
+test3 2.0
+teste4 125.9
+teste7 40.0

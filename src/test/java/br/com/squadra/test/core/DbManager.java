@@ -21,7 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 
 public class DbManager {
-	
+		
 	//private final static String DBNAME_SUPPORT_RESTORE_SQL = "master";
 	private final static String MIRROR_DBNAME_RESTORE_SQL = "LUKSDB_19-06-2020_20.44.28.BAK";
 	private final static String SQL_BKP_PATH = "D:\\testBackupSql\\";
@@ -57,17 +57,17 @@ public class DbManager {
 		this.server = server;
 		this.port = port;
 	}
-
+	//instancia do sql server.
 	public static DbManager getDbManagerSql() {
 		// dados conexao db principal da automacao sqlServer
 		return new DbManager("sa", "123", "DbLuksTest", "localhost", "1433");
 	}
-
+	//instancia do mysql
 	public static DbManager getDbManagerMySql() {
 		// dados conexao db mySql (bonus)
 		return new DbManager("root", "", "luksdb");
 	}
-
+	//faz backup da base de dados
 	public void backupDbSql() {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		String query = "BACKUP DATABASE " + getDbName() + " TO DISK = '" + SQL_BKP_PATH + "LUKSDB_" + gerarNomeComData()
@@ -82,7 +82,7 @@ public class DbManager {
 			e.printStackTrace();
 		}
 	}
-
+	//restaura base de dados.
 	public void restoreDbSql() { //DBNAME_SUPPORT_RESTORE_SQL
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		String query1 = "Use master ALTER DATABASE " + getDbName() + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
@@ -101,7 +101,7 @@ public class DbManager {
 			e.printStackTrace();
 		}
 	}
-
+	//executa query sem retorno.
 	public void executeQuery(String query) {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		PreparedStatement stmt;
@@ -115,8 +115,9 @@ public class DbManager {
 			e.printStackTrace();
 		}
 	}
-
-	public String executeQueryGetResult(String fileName, String query) {
+	
+	//executa query e retorna resultado em string.
+	public String executeQueryGetResult(String query) {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		ResultSet rs = null;
 		String result = "";
@@ -125,7 +126,7 @@ public class DbManager {
 			Statement stmt = con.createStatement();
 			rs = stmt.executeQuery(query);
 			result = getTextResultSet(rs);
-			System.out.println("query executada");
+			System.out.println("Query executada!");
 			//writeFileResult(fileName, result);
 			con.close();
 		} catch (SQLException e) {
@@ -133,7 +134,7 @@ public class DbManager {
 		}
 		return result;
 	}
-	
+	//executa query e retorna nome do arquivo salvo com os dados do retorno da consulta.
 	public String executeQueryWithResultFile(String fileName, String query) {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		ResultSet rs = null;
@@ -144,15 +145,17 @@ public class DbManager {
 			Statement stmt = con.createStatement();
 			rs = stmt.executeQuery(query);
 			result = getTextResultSet(rs);
-			System.out.println("query executada");
+			System.out.println("Query executada!");
 			newFileName = writeFileResult(fileName, result);
+			Report.getReport().writeReport("Resultado da query salvo: " + newFileName);
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return newFileName;
 	}
-
+	
+	//recebe resultset e retorna texto só com quebra de linha.
 	public String getTextResultSet(ResultSet rs) throws SQLException {
 		String result = "";
 		List<List> table = new ArrayList<List>();
@@ -175,14 +178,14 @@ public class DbManager {
 
 		String tabelaTexto = table.toString();
 		result = tabelaTexto
-				.replace("], ", "\n")
+				.replace("], ", "\r\n")
 				.replace("[", "")
 				.replace(",", "")
 				.replace("]]", "");
 
 		return result;
 	}
-
+	//salva arquivo com o texto passado.
 	public String writeFileResult(String fileName, String text) {
 		String newFileName = fileName + "_" + gerarNomeComData() + ".txt";
 		String fullNameArq = QUERY_ACTUAL_RESULT_PATH + newFileName;
@@ -192,15 +195,15 @@ public class DbManager {
 			PrintWriter gravaArq = new PrintWriter(arq);
 			gravaArq.print(text);
 			arq.close();
-			System.out.println("Arquivo gravado: " + fullNameArq);
+			System.out.println("Arquivo gravado: " + newFileName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		return newFileName;
 	}
-
-	public void assertFilesResults(String fileNameExp, String fileNameAct) {
+	//valida se 2 arquivos são iguais.
+	public void assertTwoFilesResults(String fileNameExp, String fileNameAct) {
 
 		String expFilePath = QUERY_EXPECTED_RESULT_PATH + fileNameExp;
 		String actFilePath = QUERY_ACTUAL_RESULT_PATH + fileNameAct;
@@ -212,7 +215,7 @@ public class DbManager {
 		Assert.assertEquals(true, equals);
 
 	}
-
+	//valida se 2 arquivos são iguais.
 	private boolean assertTwoFiles(File file1, File file2) {
 		try {
 			if (FileUtils.contentEquals(file1, file2)) {
@@ -223,15 +226,16 @@ public class DbManager {
 		}
 		return false;
 	}
-
-	public String readFileResults(String fullPathFile) {
+	
+	//lê arquivo e retorna o conteudo.
+	public String readFileResult(String fullPathFile) {
 		BufferedReader buffRead;
 		String file = "";
 		try {
 			buffRead = new BufferedReader(new FileReader(fullPathFile));
 			while (true) {
 				if (file != null) {
-					System.out.println(file);
+					//System.out.println(file);
 				} else
 					break;
 				file = buffRead.readLine();
@@ -242,7 +246,8 @@ public class DbManager {
 		}
 		return file;
 	}
-
+	
+	//exemplo
 	public void printResultSet(ResultSet rs) {
 		try {
 			while (rs.next()) {
@@ -254,7 +259,8 @@ public class DbManager {
 			e.printStackTrace();
 		}
 	}
-
+	
+	//faz backup bd mysql
 	public void backupDbMySql() {
 		String dump = "cmd.exe /c " + MYSQL_DUMP_PATH + " --user=" + getUser() + " --password=" + getPass() + " "
 				+ getDbName() + " > " + MYSQL_BKP_PATH + "bkpLuksDb" + gerarNomeComData() + ".sql";
@@ -267,7 +273,7 @@ public class DbManager {
 			e.printStackTrace();
 		}
 	}
-
+	//restaura banco mysql
 	public void restoreDbMySql() {
 		String restauraBkp = "cmd.exe /c " + MYSQL_FOLDER_PATH + " --user=" + getUser() + " --password=" + getPass()
 				+ " " + getDbName() + " < " + MYSQL_BKP_PATH + MIRROR_DBNAME_RESTORE_MYSQL;
@@ -278,7 +284,7 @@ public class DbManager {
 			e.printStackTrace();
 		}
 	}
-
+	//gera padrao de data.
 	private static String gerarNomeComData() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
 		Calendar c = Calendar.getInstance();

@@ -23,7 +23,7 @@ public class Conect {
 		this.server = server;
 		this.port = port;
 	}
-
+	//retorna conexao sql server
 	public Connection getConnectionSql() {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -34,7 +34,8 @@ public class Conect {
 
 		return con;
 	}
-
+	
+	//string de conexao
 	private String getUrlConnection() {
 		this.connectionUrl = "jdbc:sqlserver://" 
 				+ getServer() 

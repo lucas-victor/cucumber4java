@@ -15,13 +15,12 @@ public class DriverFactory {
 
 	private static WebDriver driver;
 
-
 	private final static String EXEC_MODE = "normal"; //Altere normal ou headless // headless só chrome e firefox
 	private final static String CHOSEN_BROWSER = BrowserType.CHROME; //Altere para rodar com chrome, firefox, IE, edge
 
 	private DriverFactory() {
 	};
-
+	//retorna driver
 	public static WebDriver getDriver() {
 
 		if (driver == null) {

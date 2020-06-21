@@ -3,6 +3,8 @@ package br.com.squadra.test.runner;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
+
+import br.com.squadra.test.core.DbManager;
 import br.com.squadra.test.core.Report;
 import br.com.squadra.test.pages.BasePage;
 import cucumber.api.CucumberOptions;
@@ -27,11 +29,16 @@ public class Runner extends BasePage {
 	
 	@BeforeClass
 	public static void before() {
+		//limpa diretorio de relatorios.
 		Report.getReport().limparPastas();
+		
+		//Restaura base de dados antes de iniciar a suite de testes.
+		//DbManager.getDbManagerSql().restoreDbSql();	
 	}
 	
 	@AfterClass
 	public static void writeExtentReport() {
+		//Zipa pasta de relatorios para backup
 		Report.getReport().zipFolder();
 	}
 }
