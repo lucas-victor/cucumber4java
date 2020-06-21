@@ -92,13 +92,13 @@ public class StepDefinition {
 		report.getScreenShot("testeAcessoGloboEsporte");
 
 		// Executa query e salva o arquivo na pasta do relatorio
-		//String fileName = db.executeQueryWithResultFile("SelIdPreco", "select id, nome from produtos");
+		String fileName = db.executeQueryWithResultFile("SelIdPreco", "select id, nome from produtos");
 		
 		// escreve no relatorio o conteudo do arquivo salvo no diretorio.
-		//report.writeReportSql(fileName);
+		report.writeReportSql(fileName);
 		
 		//faz assert dos 2 arquivos, esperado e atual.
-		//db.assertTwoFilesResults("SelIdPreco_21-06-2020_00.41.54.txt", fileName);
+		db.assertTwoFilesResults("SelIdPreco_21-06-2020_00.41.54.txt", fileName);
 	}
 
 	@When("clico no link para a Folha de São Paulo")

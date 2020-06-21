@@ -140,7 +140,7 @@ public class Report {
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy-HH.mm.ss");
 		String osname = System.getProperty("os.name");
 		String nomeDir = "";
-		if (osname.equalsIgnoreCase("windows")) {
+		if (osname.toLowerCase().contains("windows")) {
 			nomeDir = System.getProperty("user.dir") + "\\target\\report-html-" + dateFormat.format(date);
 		}
 		else {
@@ -150,7 +150,7 @@ public class Report {
 		new File(nomeDir).mkdir();
 		
 		File reportDir = null;
-		if (osname.equalsIgnoreCase("windows")) {
+		if (osname.toLowerCase().contains("windows")) {
 			reportDir = new File(REPORT_PATH);
 		}else {
 			reportDir = new File(REPORT_PATH_LINUX);
@@ -160,7 +160,7 @@ public class Report {
 		if (reportDir.exists()) {
 			String srcFolder = "";
 			String destZipFile = "";
-			if (osname.equalsIgnoreCase("windows")) {
+			if (osname.toLowerCase().contains("windows")) {
 				srcFolder = SOURCE_FOLDER_ZIP;
 				destZipFile = nomeDir + "\\report-html-" + dateFormat.format(date) + ".zip";
 			}
@@ -203,7 +203,7 @@ public class Report {
 			byte[] buf = new byte[1024];
 			int len;
 			FileInputStream in = new FileInputStream(srcFile);
-			if (osname.equalsIgnoreCase("windows")) {
+			if (osname.toLowerCase().contains("windows")) {
 				zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
 			}else {
 				zip.putNextEntry(new ZipEntry(path + "//" + folder.getName()));
@@ -221,13 +221,13 @@ public class Report {
 		
 		for (String fileName : folder.list()) {
 			if (path.equals("")) {
-				if (osname.equalsIgnoreCase("windows")) {
+				if (osname.toLowerCase().contains("windows")) {
 					addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
 				}else {
 					addFileToZip(folder.getName(), srcFolder + "//" + fileName, zip);
 				}				
 			} else {
-				if (osname.equalsIgnoreCase("windows")) {
+				if (osname.toLowerCase().contains("windows")) {
 					addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
 				}
 				else {

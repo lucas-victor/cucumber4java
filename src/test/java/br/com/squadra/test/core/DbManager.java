@@ -76,7 +76,7 @@ public class DbManager {
 		Conect conect = new Conect(getDbName(), getUser(), getPass(), getServer(), getPort());
 		String query = "";
 		String osname = System.getProperty("os.name");
-		if (osname.equalsIgnoreCase("windows")) {
+		if (osname.toLowerCase().contains("windows")) {
 			query = "BACKUP DATABASE " + getDbName() + " TO DISK = '" + SQL_BKP_PATH + "LUKSDB_" + gerarNomeComData()
 				+ ".BAK'";
 		}else {
@@ -100,7 +100,7 @@ public class DbManager {
 		String query2 = "";
 		
 		String osname = System.getProperty("os.name");
-		if (osname.equalsIgnoreCase("windows")) {
+		if (osname.toLowerCase().contains("windows")) {
 			query2 = "Use master RESTORE DATABASE " + getDbName() + " FROM DISK = '" + SQL_BKP_PATH + MIRROR_DBNAME_RESTORE_SQL
 				+ "' WITH REPLACE";
 		}else {
@@ -209,7 +209,7 @@ public class DbManager {
 		String newFileName = fileName + "_" + gerarNomeComData() + ".txt";
 		String fullNameArq = "";
 		String osname = System.getProperty("os.name");
-		if (osname.equalsIgnoreCase("windows")) {
+		if (osname.toLowerCase().contains("windows")) {
 			fullNameArq = QUERY_ACTUAL_RESULT_PATH + newFileName;
 		}else {
 			fullNameArq = QUERY_ACTUAL_RESULT_PATH_LINUX + newFileName;
@@ -231,7 +231,7 @@ public class DbManager {
 		String expFilePath = ""; 
 		String actFilePath = "";
 		String osname = System.getProperty("os.name");
-		if (osname.equalsIgnoreCase("windows")) {
+		if (osname.toLowerCase().contains("windows")) {
 			expFilePath = QUERY_EXPECTED_RESULT_PATH + fileNameExp;
 			actFilePath = QUERY_ACTUAL_RESULT_PATH + fileNameAct;
 		}else {
