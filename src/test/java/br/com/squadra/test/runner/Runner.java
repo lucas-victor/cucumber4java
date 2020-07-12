@@ -33,7 +33,7 @@ public class Runner extends BasePage {
 		Report.getReport().limparPastas();
 		
 		//Restaura base de dados antes de iniciar a suite de testes.
-		DbManager.getDbManagerSql().restoreDbSql();	
+		//DbManager.getDbManagerSql().restoreDbSql();	
 	}
 	
 	@AfterClass

@@ -34,81 +34,77 @@ public class Report {
 	private final static String REPORT_PATH = System.getProperty("user.dir") + "\\target\\report-html\\";
 	private final static String REPORT_PATH_LINUX = System.getProperty("user.dir") + "//target//report-html//";
 	
-	private final static String SCREENSHOT_FOLDER = System.getProperty("user.dir") + "/target/report-html/screenShot";
-	private final static String QUERY_FOLDER_ACT = System.getProperty("user.dir") + "/target/report-html/actualQueryResults"; 
-	private final static String QUERY_FOLDER_EXP = System.getProperty("user.dir") + "/src/test/java/expectedQueryResults";
-	private final static String LOGGER_FOLDER = System.getProperty("user.dir") + "/target/report-html/logger";
-	private final static String SPARK_FOLDER = System.getProperty("user.dir") + "/target/report-html/spark";
-	private final static String REPORT_FOLDER = System.getProperty("user.dir") + "/target/report-html";
+	private final static String SCREENSHOT_FOLDER = System.getProperty("user.dir") + "//target//report-html//screenShot";
+	private final static String QUERY_FOLDER_ACT = System.getProperty("user.dir") + "//target//report-html//actualQueryResults"; 
+	private final static String QUERY_FOLDER_EXP = System.getProperty("user.dir") + "//src//test//java//expectedQueryResults";
+	private final static String LOGGER_FOLDER = System.getProperty("user.dir") + "//target//report-html//logger";
+	private final static String SPARK_FOLDER = System.getProperty("user.dir") + "//target//report-html//spark";
+	private final static String REPORT_FOLDER = System.getProperty("user.dir") + "//target//report-html";
 	
-	private final static String SCREENSHOT_FOLDER_LINUX = System.getProperty("user.dir") + "//target//report-html//screenShot";
-	private final static String QUERY_FOLDER_ACT_LINUX = System.getProperty("user.dir") + "//target//report-html//actualQueryResults"; 
-	private final static String QUERY_FOLDER_EXP_LINUX = System.getProperty("user.dir") + "//src//test//java//expectedQueryResults";
-	private final static String LOGGER_FOLDER_LINUX = System.getProperty("user.dir") + "//target//report-html//logger";
-	private final static String SPARK_FOLDER_LINUX = System.getProperty("user.dir") + "//target//report-html//spark";
-	private final static String REPORT_FOLDER_LINUX = System.getProperty("user.dir") + "//target//report-html";
 	
 	private TakesScreenshot ss;
 	private Scenario scenario;
 
-	public Report() {		
+	public Report() {
 	}
-	
+
 	public String getReportConfigPath() {
 		return REPORT_CONFIG;
 	}
-	
+
 	public static Report getReport() {
 		return new Report();
 	}
-	//print tela e salva relatorio - scenario
+
+	// print tela e salva relatorio - scenario
 	public void getScreenShot(Scenario cenario) throws IOException {
 		this.ss = (TakesScreenshot) getDriver();
 		this.scenario = cenario;
-		
+
 		File arquivo = ss.getScreenshotAs(OutputType.FILE);
 		String ImageName = cenario.getName().trim() + ".jpg";
 		String imagePath = SCREENSHOT_PATH + ImageName;
 		FileUtils.copyFile(arquivo, new File(imagePath));
-		
+
 		/*
 		 * cenario.write("Adicionando imagem no relatorio pelo cenario..."); byte []
 		 * screenshot = ss.getScreenshotAs(OutputType.BYTES); cenario.embed(screenshot,
 		 * "target/png");
 		 */
-		
-		//writeReport("Imagem adicionada no relatorio: " + ImageName);
-		
+
+		// writeReport("Imagem adicionada no relatorio: " + ImageName);
+
 		addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 	}
-	//print tela e salva relatorio - string
+
+	// print tela e salva relatorio - string
 	public void getScreenShot(String printName) {
 		this.ss = (TakesScreenshot) getDriver();
 		File arquivo = ss.getScreenshotAs(OutputType.FILE);
 		String ImageName = printName.trim() + ".jpg";
 		String imagePath = SCREENSHOT_PATH + ImageName;
-		
+
 		try {
 			FileUtils.copyFile(arquivo, new File(imagePath));
-			//writeReport("Imagem adicionada no relatorio: " + ImageName);
+			// writeReport("Imagem adicionada no relatorio: " + ImageName);
 			addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	//escreve conteudo do arquivo de resultado da query no relatorio.
+
+	// escreve conteudo do arquivo de resultado da query no relatorio.
 	public void writeReportSql(String resultFileName) {
-		String fullFilePath = QUERY_FOLDER_ACT + "/" + resultFileName ;
+		String fullFilePath = QUERY_FOLDER_ACT + "/" + resultFileName;
 		BufferedReader buffRead;
 		String linha = "";
 		try {
 			buffRead = new BufferedReader(new FileReader(fullFilePath));
 			while (true) {
 				if (linha != null) {
-					//System.out.println(linha);
-					writeReport(linha);
+					// System.out.println(linha);
+					addStepLog(linha);
 				} else
 					break;
 				linha = buffRead.readLine();
@@ -116,23 +112,25 @@ public class Report {
 			buffRead.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
-	//escreve no relatorio
-	public void writeReport(String msg) {
+
+	// escreve no relatorio
+	public void addStepLog(String msg) {
 		ExtentCucumberAdapter.addTestStepLog(msg);
 	}
-	//adiciona imagem relatorio
+
+	// adiciona imagem relatorio
 	private void addImageReport(String imageName) throws IOException {
 		ExtentCucumberAdapter.addTestStepScreenCaptureFromPath(imageName);
 	}
-	
+
 	public Scenario getScenario() {
 		return this.scenario;
 	}
-	
-	//faz backup da pasta de relatorio zip 
-	public void zipFolder()  {
+
+	// faz backup da pasta de relatorio zip
+	public void zipFolder() {
 
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy-HH.mm.ss");
@@ -140,29 +138,26 @@ public class Report {
 		String nomeDir = "";
 		if (osname.toLowerCase().contains("windows")) {
 			nomeDir = System.getProperty("user.dir") + "\\target\\report-html-" + dateFormat.format(date);
-		}
-		else {
+		} else {
 			nomeDir = System.getProperty("user.dir") + "//target//report-html-" + dateFormat.format(date);
 		}
-		
+
 		new File(nomeDir).mkdir();
-		
+
 		File reportDir = null;
 		if (osname.toLowerCase().contains("windows")) {
 			reportDir = new File(REPORT_PATH);
-		}else {
+		} else {
 			reportDir = new File(REPORT_PATH_LINUX);
 		}
-		
-		
+
 		if (reportDir.exists()) {
 			String srcFolder = "";
 			String destZipFile = "";
 			if (osname.toLowerCase().contains("windows")) {
 				srcFolder = SOURCE_FOLDER_ZIP;
 				destZipFile = nomeDir + "\\report-html-" + dateFormat.format(date) + ".zip";
-			}
-			else {
+			} else {
 				srcFolder = SOURCE_FOLDER_ZIP_LINUX;
 				destZipFile = nomeDir + "//report-html-" + dateFormat.format(date) + ".zip";
 			}
@@ -172,19 +167,18 @@ public class Report {
 			try {
 				fileWriter = new FileOutputStream(destZipFile);
 				zip = new ZipOutputStream(fileWriter);
-				
+
 				addFolderToZip("", srcFolder, zip);
 				zip.flush();
 				zip.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			System.out.println("Backup do relatório realizado com sucesso!");
-		}
-		else {
+		} else {
 			System.out.println("Não há relatórios para backup.");
 		}
 
@@ -194,7 +188,7 @@ public class Report {
 
 		File folder = new File(srcFile);
 		String osname = System.getProperty("os.name");
-		
+
 		if (folder.isDirectory()) {
 			addFolderToZip(path, srcFile, zip);
 		} else {
@@ -203,7 +197,7 @@ public class Report {
 			FileInputStream in = new FileInputStream(srcFile);
 			if (osname.toLowerCase().contains("windows")) {
 				zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
-			}else {
+			} else {
 				zip.putNextEntry(new ZipEntry(path + "//" + folder.getName()));
 			}
 			while ((len = in.read(buf)) > 0) {
@@ -216,26 +210,25 @@ public class Report {
 	private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip) throws Exception {
 		File folder = new File(srcFolder);
 		String osname = System.getProperty("os.name");
-		
+
 		for (String fileName : folder.list()) {
 			if (path.equals("")) {
 				if (osname.toLowerCase().contains("windows")) {
 					addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
-				}else {
+				} else {
 					addFileToZip(folder.getName(), srcFolder + "//" + fileName, zip);
-				}				
+				}
 			} else {
 				if (osname.toLowerCase().contains("windows")) {
 					addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
-				}
-				else {
+				} else {
 					addFileToZip(path + "//" + folder.getName(), srcFolder + "//" + fileName, zip);
 				}
 			}
 		}
 	}
-	
-	//limpa pasta de relatorios
+
+	// limpa pasta de relatorios
 	public void limparPastas() {
 		String osname = System.getProperty("os.name");
 		File pasta1 = null;
@@ -243,21 +236,13 @@ public class Report {
 		File pasta3 = null;
 		File pasta4 = null;
 		File pasta5 = null;
-		
-		if (osname.toLowerCase().contains("windows")) {
-			pasta1 = new File(SCREENSHOT_FOLDER);
-			pasta2 = new File(QUERY_FOLDER_ACT);
-			pasta3 = new File(LOGGER_FOLDER);
-			pasta4 = new File(SPARK_FOLDER);
-			pasta5 = new File(REPORT_FOLDER);
-		}else {
-			pasta1 = new File(SCREENSHOT_FOLDER_LINUX);
-			pasta2 = new File(QUERY_FOLDER_ACT_LINUX);
-			pasta3 = new File(LOGGER_FOLDER_LINUX);
-			pasta4 = new File(SPARK_FOLDER_LINUX);
-			pasta5 = new File(REPORT_FOLDER_LINUX);
-		}
-		
+
+		pasta1 = new File(SCREENSHOT_FOLDER);
+		pasta2 = new File(QUERY_FOLDER_ACT);
+		pasta3 = new File(LOGGER_FOLDER);
+		pasta4 = new File(SPARK_FOLDER);
+		pasta5 = new File(REPORT_FOLDER);
+
 		System.out.println("Limpando pastas de arquivos...");
 		deleteAndCreateFileDirs(pasta5);
 		deleteAndCreateFileDirs(pasta4);
@@ -266,21 +251,23 @@ public class Report {
 		deleteAndCreateFileDirs(pasta1);
 		System.out.println("Arquivos deletados! \n");
 	}
-	//deleta arquivos
+
+	// deleta arquivos
 	private void deleteFiles(File file) {
 		File[] files = file.listFiles();
 		for (File file1 : files) {
-			
+
 			file1.setWritable(true);
 			file1.delete();
 		}
 	}
-	//deleta e recria diretorios
+
+	// deleta e recria diretorios
 	private void deleteAndCreateFileDirs(File file) {
 		if (file.exists()) {
 			deleteFiles(file);
 			file.mkdir();
-		}else {
+		} else {
 			file.mkdir();
 		}
 	}

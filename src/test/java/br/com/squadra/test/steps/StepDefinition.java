@@ -1,18 +1,17 @@
 package br.com.squadra.test.steps;
 
 import java.io.IOException;
-
-import org.junit.Assert;
+import br.com.squadra.test.core.DSL;
 
 import br.com.squadra.test.core.DbManager;
 import br.com.squadra.test.core.Report;
+import br.com.squadra.test.pages.ConsultaPlatPage;
 import br.com.squadra.test.pages.FolhaPage;
 import br.com.squadra.test.pages.GloboPage;
 import br.com.squadra.test.pages.GloboesportePage;
 import br.com.squadra.test.pages.HomePage;
 import br.com.squadra.test.pages.LoginPage;
 import br.com.squadra.test.pages.UolPage;
-import cucumber.api.Scenario;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -25,6 +24,7 @@ public class StepDefinition {
 	private GloboPage globoPage = new GloboPage();
 	private GloboesportePage globoesportePage = new GloboesportePage();
 	private FolhaPage folhaPage = new FolhaPage();
+	private ConsultaPlatPage consultaPage = new ConsultaPlatPage();
 	private Report report = new Report();
 	private TestRule tr = new TestRule();
 	private DbManager db = DbManager.getDbManagerSql();
@@ -34,7 +34,7 @@ public class StepDefinition {
 		loginPage.acessarPaginaPrincipal();
 
 		// escreve no relatorio
-		report.writeReport("Teste google acesso write...");
+		report.addStepLog("Teste google acesso write...");
 		// tira screeshot da tela e salvo o print em arquivo e insere no relatorio
 		report.getScreenShot("testeAcessoGoogle");
 
@@ -52,7 +52,7 @@ public class StepDefinition {
 	@When("pesquiso pelo site {string}")
 	public void pesquisoSiteLancenet(String site) {
 		homePage.pesquisarSiteLancenet(site);
-		report.writeReport("Teste pesquiso pelo site...");
+		report.addStepLog("Teste pesquiso pelo site...");
 		report.getScreenShot("testePesquisaSite");
 		
 		// executa query e retorna resultado em string
@@ -81,7 +81,7 @@ public class StepDefinition {
 		homePage.acessarPrimeiroSiteRetornadoUOL();
 		
 		//só executa a query, sem retorno.
-		db.executeQuery("select * from produtos");
+		//db.executeQuery("select * from produtos");
 		
 		
 	}
@@ -92,13 +92,13 @@ public class StepDefinition {
 		report.getScreenShot("testeAcessoGloboEsporte");
 
 		// Executa query e salva o arquivo na pasta do relatorio
-		String fileName = db.executeQueryWithResultFile("SelIdPreco", "select id, nome from produtos");
+		//String fileName = db.executeQueryWithResultFile("SelIdPreco", "select id, nome from produtos");
 		
 		// escreve no relatorio o conteudo do arquivo salvo no diretorio.
-		report.writeReportSql(fileName);
+		//report.writeReportSql(fileName);
 		
 		//faz assert dos 2 arquivos, esperado e atual.
-		db.assertTwoFilesResults("SelIdPreco_21-06-2020_00.41.54.txt", fileName);
+		//db.assertTwoFilesResults("SelIdPreco_21-06-2020_00.41.54.txt", fileName);
 	}
 
 	@When("clico no link para a Folha de São Paulo")
@@ -114,5 +114,8 @@ public class StepDefinition {
 	@Then("valido a existência do link Mundo")
 	public void validoLinkMundo() {
 		folhaPage.validarLinkMundo();
+		consultaPage.selecionaPlataforma("id");
+		
+		
 	}
 }

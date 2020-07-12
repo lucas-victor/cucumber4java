@@ -166,7 +166,7 @@ public class DbManager {
 			result = getTextResultSet(rs);
 			System.out.println("Query executada!");
 			newFileName = writeFileResult(fileName, result);
-			Report.getReport().writeReport("Resultado da query salvo: " + newFileName);
+			Report.getReport().addStepLog("Resultado da query salvo: " + newFileName);
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

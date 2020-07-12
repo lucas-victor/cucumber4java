@@ -25,4 +25,9 @@ public class BasePage {
 		dsl.esperarAteInvisivel(XPATH_UIBLOCK);
 		dsl.esperarAteInvisivel(X_PATH_TEXTBLOCK);
 	}
+	
+	//escreve arquivo e retorna nome
+	public String writeFileResult(String fileName, String text) {
+		return getDSL().writeFile(fileName, text);
+	}
 }
