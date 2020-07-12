@@ -45,7 +45,7 @@ public class ConsultaPlatPage extends BasePage{
 		
 	}
 	
-	public void clicarMenuConsulta(String site) {
+	public void clicarMenuConsulta() {
 		//getDSL().digitar(XPATH_CAMPO_PESQUISA, site);
 		getDSL().mouseHoverClickXpath(XPATH_MENU_CONSULTA);
 	}
@@ -60,7 +60,7 @@ public class ConsultaPlatPage extends BasePage{
 		}	
 	}
 	
-	public void preencheTerminal(String terminal) {
+	public void digitarTerminal(String terminal) {
 		//driver.findElement(By.name()).sendKeys(terminal);
 		getDSL().digitarName(NAME_CAMPO_TERMINAL, terminal);
 	}
@@ -119,12 +119,16 @@ public class ConsultaPlatPage extends BasePage{
 	
 	public void validaInformacoesOcsHuawei(String idOrCpf) {
 		//getDSL().validaResultadoOCSid();
-		String result = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
-		String resultFileName = getDSL().writeFile("resultOcsID", result);
-		
+		if (idOrCpf.equalsIgnoreCase("id")) {
+			getDSL().assertTwoFileResults("testeResultEsperadoID", "testeResultAtualID");
+			
+			//String result = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
+			//String resultFileName = getDSL().writeFile("resultOcsID", result);	
+		}
+		else
+			getDSL().assertTwoFileResults("testeResultEsperadoCPF", "testeResultAtualCPF");
 				
 	}
-	
 	
 	
 	public void acessarPrimeiroSiteRetornadoUOL() {

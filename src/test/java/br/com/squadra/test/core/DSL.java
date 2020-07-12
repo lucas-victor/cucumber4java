@@ -372,6 +372,10 @@ public class DSL {
 		return file;
 	}
 	
+	public void assertTwoFileResults(String fileNameExp, String fileNameAct) {
+		db.assertTwoFileResults(fileNameExp, fileNameAct);
+	}
+	
 	public void validaResultadoOCSid() {
 
 		List<String> resultTabela = new ArrayList<String>();

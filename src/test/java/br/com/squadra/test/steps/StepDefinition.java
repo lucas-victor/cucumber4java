@@ -116,6 +116,50 @@ public class StepDefinition {
 		folhaPage.validarLinkMundo();
 		consultaPage.selecionaPlataforma("id");
 		
-		
 	}
+	
+	
+	
+	
+	
+	
+	//Teste consulta plataformas...
+	
+	@Given("que estou logado no site")
+	public void queEstouLogadoNoSite() {
+	    consultaPage.acessaTelaInicial();
+	}
+
+	@Given("acesso o menu Consulta Plataformas")
+	public void acessoOMenuConsultaPlataformas() {
+	    consultaPage.clicarMenuConsulta();
+	}
+
+	@When("preencho os dados da tela com ID {string}")
+	public void preenchoOsDadosDaTelaComID(String id) {
+		consultaPage.selecionaRadioButton("id");
+	    consultaPage.digitarTerminal(id);
+	}
+
+	@When("seleciono a plataforma {string}")
+	public void selecionoAPlataforma(String plataforma) {
+	    consultaPage.selecionaPlataforma(plataforma);
+	}
+
+	@When("clico no botao Pesquisar")
+	public void clicoNoBotaoPesquisar() {
+	    consultaPage.clicarBotaoPesquisar();
+	}
+
+	@Then("devo ver os dados exibidos")
+	public void devoVerOsDadosExibidos() {
+	    consultaPage.verificaExibiraDados();
+	}
+
+	@Then("validar as informacoes da OCS Huawei OCS{int} {string}")
+	public void validarAsInformacoesDaOCSHuaweiOCS(Integer int1, String string) {
+	    consultaPage.validaInformacoesOcsHuawei("id");
+	}
+	
+	
 }

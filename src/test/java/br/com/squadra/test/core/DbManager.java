@@ -227,7 +227,7 @@ public class DbManager {
 		return newFileName;
 	}
 	//valida se 2 arquivos são iguais.
-	public void assertTwoFilesResults(String fileNameExp, String fileNameAct) {
+	public void assertTwoFileResults(String fileNameExp, String fileNameAct) {
 		String expFilePath = ""; 
 		String actFilePath = "";
 		String osname = System.getProperty("os.name");

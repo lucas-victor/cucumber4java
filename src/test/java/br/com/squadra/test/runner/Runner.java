@@ -16,12 +16,12 @@ import cucumber.api.junit.Cucumber;
 		
 		features = "src/test/resources/features/",
 		glue = {"br.com.squadra.test.steps"},
-		tags = "@Run",
+		tags = "@ConsultaID", //@Run
 		plugin = {"pretty", "html:target/report-html/", "json:target:report.json",
 				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"},
 		monochrome = true,
 		snippets = SnippetType.CAMELCASE,
-		dryRun = false,
+		dryRun = true,
 		strict = false
 		)
 
