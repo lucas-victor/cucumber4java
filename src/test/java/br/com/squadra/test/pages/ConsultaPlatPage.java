@@ -104,7 +104,7 @@ public class ConsultaPlatPage extends BasePage{
 	
 	//verifica se a panel abriu
 	public void verificaExibiraDados() {
-		getDSL().verificarNaoApareceuNaTela(XPATH_PANEL_RESULT);
+		//getDSL().verificarNaoApareceuNaTela(XPATH_PANEL_RESULT);
 	}
 	
 	//pega texto tabela page.
@@ -119,16 +119,29 @@ public class ConsultaPlatPage extends BasePage{
 	
 	public void validaInformacoesOcsHuawei(String idOrCpf) {
 		//getDSL().validaResultadoOCSid();
+		
+		
 		if (idOrCpf.equalsIgnoreCase("id")) {
-			getDSL().assertTwoFileResults("testeResultEsperadoID", "testeResultAtualID");
 			
-			//String result = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
-			//String resultFileName = getDSL().writeFile("resultOcsID", result);	
+			//pega texto da tabela do site.
+			String textTable = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
+			
+			//salva arquivo com conteudo passado
+			String nomeArquivoSalvo = getDSL().writeFile("resultIdOcs01", textTable);
+			
+			//faz assert de 2 arquivos, resultado esperado e resultado atual.
+			getDSL().assertTwoFileResults("resultIdOcs01_13-07-2020_20.03.46.txt", nomeArquivoSalvo);
+			
 		}
-		else
-			getDSL().assertTwoFileResults("testeResultEsperadoCPF", "testeResultAtualCPF");
+		else {
+			String textTable = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
+			String nomeArquivoAtual = getDSL().writeFile("resultCpfOcs01", textTable);
+			
+			getDSL().assertTwoFileResults("testeResultEsperadoCPF", nomeArquivoAtual);
+		}
 				
 	}
+	
 	
 	
 	public void acessarPrimeiroSiteRetornadoUOL() {

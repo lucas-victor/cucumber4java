@@ -1,5 +1,7 @@
 package br.com.squadra.test.core;
 
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -48,14 +50,16 @@ public class DriverFactory {
 				System.out.println("Browser inválido.");
 			}
 			// driver.manage().window().maximize();
+			
 		}
-
+		//implicty wait 100 sec because vpn.
+		driver.manage().timeouts().implicitlyWait(300, TimeUnit.SECONDS);
 		return driver;
 	}
 	
 	private static void getDriverForName(String browserType) throws BrowserInvalidoException {
 		Browser browser = Browser.validaBrowser(browserType);		
-		System.setProperty(browser.getPropriedadeDriver(), browser.getPathDriver());			
+		System.setProperty(browser.getPropriedadeDriver(), browser.getPathDriver());
 		definirDriver(browser.getNome(), EXEC_MODE);
 	}	
 

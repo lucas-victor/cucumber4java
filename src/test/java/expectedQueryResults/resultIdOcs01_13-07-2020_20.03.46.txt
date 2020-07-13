@@ -1,0 +1,20 @@
+MSISDN 5588988343305
+Documento (CPF/CNPJ/PASSAPORTE) 10979451701
+Original ID 1-1DY4WGGF
+ID da Conta 1-1J1IZLL5OCS
+Plano Principal 5001
+ID do Plano Suplementar 1200001
+Data de Efetivação do plano suplementar 15/04/2020 14:48:43
+Data de Expiração do plano suplementar 31/12/2036 21:00:00
+ID do Plano Suplementar 2200018
+Data de Efetivação do plano suplementar 15/04/2020 14:48:43
+Data de Expiração do plano suplementar 31/12/2036 21:00:00
+ID do Plano Suplementar 2200004
+Data de Efetivação do plano suplementar 15/04/2020 14:48:43
+Data de Expiração do plano suplementar 31/12/2036 21:00:00
+ID do Plano Suplementar 2200003
+Data de Efetivação do plano suplementar 15/04/2020 14:48:43
+Data de Expiração do plano suplementar 31/12/2036 21:00:00
+ID do Plano Suplementar 2200001
+Data de Efetivação do plano suplementar 15/04/2020 14:48:43
+Data de Expiração do plano suplementar 31/12/2036 21:00:00

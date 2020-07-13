@@ -21,7 +21,7 @@ import cucumber.api.junit.Cucumber;
 				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"},
 		monochrome = true,
 		snippets = SnippetType.CAMELCASE,
-		dryRun = true,
+		dryRun = false,
 		strict = false
 		)
 
@@ -29,7 +29,7 @@ public class Runner extends BasePage {
 	
 	@BeforeClass
 	public static void before() {
-		//limpa diretorio de relatorios.
+		//limpa diretorio de arquivos gerados pelo teste.
 		Report.getReport().limparPastas();
 		
 		//Restaura base de dados antes de iniciar a suite de testes.
@@ -38,7 +38,7 @@ public class Runner extends BasePage {
 	
 	@AfterClass
 	public static void writeExtentReport() {
-		//Zipa pasta de relatorios para backup
+		//Zipa pasta de relatorios, backup.
 		Report.getReport().zipFolder();
 	}
 }

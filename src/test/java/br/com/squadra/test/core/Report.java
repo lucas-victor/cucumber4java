@@ -74,7 +74,7 @@ public class Report {
 
 		// writeReport("Imagem adicionada no relatorio: " + ImageName);
 
-		addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
+		addScreenshotReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 	}
 
 	// print tela e salva relatorio - string
@@ -87,7 +87,7 @@ public class Report {
 		try {
 			FileUtils.copyFile(arquivo, new File(imagePath));
 			// writeReport("Imagem adicionada no relatorio: " + ImageName);
-			addImageReport(RELATIVE_SCREENSHOT_PATH + ImageName);
+			addScreenshotReport(RELATIVE_SCREENSHOT_PATH + ImageName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -121,7 +121,7 @@ public class Report {
 	}
 
 	// adiciona imagem relatorio
-	private void addImageReport(String imageName) throws IOException {
+	private void addScreenshotReport(String imageName) throws IOException {
 		ExtentCucumberAdapter.addTestStepScreenCaptureFromPath(imageName);
 	}
 
