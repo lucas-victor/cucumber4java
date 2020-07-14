@@ -9,6 +9,8 @@ import org.openqa.selenium.WebElement;
 
 import com.cucumber.listener.Reporter;
 
+import br.com.squadra.test.core.Report;
+
 public class ConsultaPlatPage extends BasePage{
 
 	private String URL_INICIO = "http://10.121.216.69:7003/sisativacao/#/home";
@@ -119,25 +121,29 @@ public class ConsultaPlatPage extends BasePage{
 	
 	public void validaInformacoesOcsHuawei(String idOrCpf) {
 		//getDSL().validaResultadoOCSid();
-		
-		
+		String conteudoTabela = "";
+		String nomeArqResultAtual = "";
 		if (idOrCpf.equalsIgnoreCase("id")) {
 			
 			//pega texto da tabela do site.
-			String textTable = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
+			conteudoTabela = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
+			Report.getReport().addStepLog(conteudoTabela);
 			
 			//salva arquivo com conteudo passado
-			String nomeArquivoSalvo = getDSL().writeFile("resultIdOcs01", textTable);
+			nomeArqResultAtual = getDSL().writeFile("resultIdOcs01", conteudoTabela);
 			
 			//faz assert de 2 arquivos, resultado esperado e resultado atual.
-			getDSL().assertTwoFileResults("resultIdOcs01_13-07-2020_20.03.46.txt", nomeArquivoSalvo);
+			getDSL().assertTwoFileResults("resultIdOcs01_13-07-2020_20.03.46.txt", nomeArqResultAtual);
 			
 		}
 		else {
-			String textTable = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
-			String nomeArquivoAtual = getDSL().writeFile("resultCpfOcs01", textTable);
+			//pega texto da tabela do site.
+			conteudoTabela = getDSL().getResultTable(XPATH_TABELA_RESULT_OCS_ID);
+			Report.getReport().addStepLog(conteudoTabela);
+			//salva arquivo com conteudo passado
+			nomeArqResultAtual = getDSL().writeFile("resultCpfOcs01", conteudoTabela);
 			
-			getDSL().assertTwoFileResults("testeResultEsperadoCPF", nomeArquivoAtual);
+			getDSL().assertTwoFileResults("testeResultEsperadoCPF", nomeArqResultAtual);
 		}
 				
 	}

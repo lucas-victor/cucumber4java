@@ -33,9 +33,11 @@ public class DbManager {
 	private final static String MYSQL_BKP_PATH = "D:\\dumpMySql\\";
 
 	private final static String QUERY_ACTUAL_RESULT_PATH = "target/report-html/actualQueryResults/";
-	private final static String QUERY_EXPECTED_RESULT_PATH = "src/test/java/expectedQueryResults/";
+	//private final static String QUERY_EXPECTED_RESULT_PATH = "src/test/java/expectedQueryResults/";
+	private final static String QUERY_EXPECTED_RESULT_PATH = "src/test/resources/queryResultsExp/";
 	private final static String QUERY_ACTUAL_RESULT_PATH_LINUX = "target//report-html//actualQueryResults//";
-	private final static String QUERY_EXPECTED_RESULT_PATH_LINUX = "src//test//java//expectedQueryResults//";
+	//private final static String QUERY_EXPECTED_RESULT_PATH_LINUX = "src//test//java//expectedQueryResults//";
+	private final static String QUERY_EXPECTED_RESULT_PATH_LINUX = "src//test//resources//queryResultsExp//";
 
 	private String user = "sa";
 	private String pass = "123";

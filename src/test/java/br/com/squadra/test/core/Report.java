@@ -36,7 +36,8 @@ public class Report {
 	
 	private final static String SCREENSHOT_FOLDER = System.getProperty("user.dir") + "//target//report-html//screenShot";
 	private final static String QUERY_FOLDER_ACT = System.getProperty("user.dir") + "//target//report-html//actualQueryResults"; 
-	private final static String QUERY_FOLDER_EXP = System.getProperty("user.dir") + "//src//test//java//expectedQueryResults";
+	//private final static String QUERY_FOLDER_EXP = System.getProperty("user.dir") + "//src//test//java//expectedQueryResults";
+	private final static String QUERY_FOLDER_EXP = System.getProperty("user.dir") + "//src//test//resources//queryResultsExp";
 	private final static String LOGGER_FOLDER = System.getProperty("user.dir") + "//target//report-html//logger";
 	private final static String SPARK_FOLDER = System.getProperty("user.dir") + "//target//report-html//spark";
 	private final static String REPORT_FOLDER = System.getProperty("user.dir") + "//target//report-html";

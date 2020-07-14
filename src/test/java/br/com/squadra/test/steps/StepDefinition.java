@@ -119,10 +119,6 @@ public class StepDefinition {
 	}
 	
 	
-	
-	
-	
-	
 	//Teste consulta plataformas...
 	
 	@Given("que estou logado no site")
@@ -148,6 +144,7 @@ public class StepDefinition {
 
 	@When("clico no botao Pesquisar")
 	public void clicoNoBotaoPesquisar() {
+		report.getScreenShot("dadosParaConsulta");
 	    consultaPage.clicarBotaoPesquisar();
 	}
 
