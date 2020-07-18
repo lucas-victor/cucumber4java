@@ -158,5 +158,24 @@ public class StepDefinition {
 	    consultaPage.validaInformacoesOcsHuawei("id");
 	}
 	
+	//consulta por CPF.
+	@When("preencho os dados da tela com CPF {string}")
+	public void preenchoOsDadosDaTelaComCPF(String cpfCnpj) {
+		consultaPage.selecionaRadioButton("cpf");
+	    consultaPage.digitarTerminal(cpfCnpj);
+	}
+	
+	//consulta msisdn imsi terminal
+	@When("preencho os dados da tela com MSISDN {string}")
+	public void preenchoOsDadosDaTelaComMSISDN(String msisdn) {
+		consultaPage.selecionaRadioButton("id");
+	    consultaPage.digitarTerminal(msisdn);
+	}
+
+	@Then("validar as informacoes da consulta {string}")
+	public void validarAsInformacoesDaConsulta(String result) {
+	    consultaPage.validaInformacoesConsulta(result);
+	}
+
 	
 }

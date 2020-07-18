@@ -415,6 +415,11 @@ public class DSL {
 		return file;
 	}
 	
+	public String writeResultTableFileXpath(String resultFileName, String xpath) {
+		String result = this.getResultTable(xpath);
+		return this.writeFile(resultFileName, result);
+	}
+	
 	@Test
 	public void assertTwoFileResults(String fileNameExp, String fileNameAct) {
 		db.assertTwoFileResults(fileNameExp, fileNameAct);
