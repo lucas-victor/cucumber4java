@@ -160,22 +160,32 @@ public class StepDefinition {
 	
 	//consulta por CPF.
 	@When("preencho os dados da tela com CPF {string}")
-	public void preenchoOsDadosDaTelaComCPF(String cpfCnpj) {
+	public void preenchoOsDadosDaTelaComCPF(String cpf) {
 		consultaPage.selecionaRadioButton("cpf");
-	    consultaPage.digitarTerminal(cpfCnpj);
+	    consultaPage.digitarTerminal(cpf);
 	}
 	
-	//consulta msisdn imsi terminal
+	//consulta por MSISDN.
 	@When("preencho os dados da tela com MSISDN {string}")
 	public void preenchoOsDadosDaTelaComMSISDN(String msisdn) {
 		consultaPage.selecionaRadioButton("id");
 	    consultaPage.digitarTerminal(msisdn);
 	}
-
+	//consulta por CNPJ.
+	@When("preencho os dados da tela com CNPJ {string}")
+	public void preenchoOsDadosDaTelaComCNPJ(String cnpj) {
+		consultaPage.selecionaRadioButton("cnpj");
+	    consultaPage.digitarTerminal(cnpj);
+	}
+	//consulta por IMSI.
+	@When("preencho os dados da tela com IMSI {string}")
+	public void preenchoOsDadosDaTelaComIMSI(String imsi) {
+		consultaPage.selecionaRadioButton("imsi");
+	    consultaPage.digitarTerminal(imsi);
+	}
+	
 	@Then("validar as informacoes da consulta {string}")
 	public void validarAsInformacoesDaConsulta(String result) {
 	    consultaPage.validaInformacoesConsulta(result);
 	}
-
-	
 }

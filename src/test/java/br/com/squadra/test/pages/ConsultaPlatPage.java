@@ -38,7 +38,7 @@ public class ConsultaPlatPage extends BasePage {
 	// tabela de resultado ID
 	private String XPATH_PANEL_RESULT = "//*[@class=\"pi pi-minus\"]";
 	private String XPATH_TABELA_RESULT_OCS_ID = "//*[@id=\"ui-panel-0-content\"]";
-	// Tabelas de resultado CPF CNJP
+	// Tabelas de resultados CPF CNJP
 	private String XPATH_TABELA_RESULT_OCS01_CPFCNJP_ABA_1 = "//*[@id=\"ui-tabpanel-0\"]";
 	private String XPATH_TABELA_RESULT_OCS01_CPFCNJP_ABA_2 = "//*[@id=\"ui-tabpanel-1\"]";
 	private String XPATH_TABELA_RESULT_OCS01_CPFCNJP_ABA_3 = "//*[@id=\"ui-tabpanel-2\"]";
@@ -50,9 +50,9 @@ public class ConsultaPlatPage extends BasePage {
 	private String ID_OCS_CPFCNPJ_ABA_3 = "ui-tabpanel-3-label";
 	private String ID_OCS_CPFCNPJ_ABA_4 = "ui-tabpanel-4-label";
 	private String ID_OCS_CPFCNPJ_ABA_5 = "ui-tabpanel-5-label";
-	// tabela msisdn
+	// tabela de resultado msisdn
 	private String XPATH_TABELA_RESULT_VMS04_MSISDN = "//*[@id=\"ui-panel-0-content\"]/div";
-	// tabela imsi
+	// tabela de resultado imsi
 	private String XPATH_TABELA_RESULT_LSMS01_IMSI = "//*[@id=\"ui-panel-0-content\"]/div";
 
 	public ConsultaPlatPage() {
@@ -203,7 +203,7 @@ public class ConsultaPlatPage extends BasePage {
 		}
 	}
 
-	public void acessarPrimeiroSiteRetornadoUOL() {
-		getDSL().esperarAteExistente(XPATH_PRIMEIRO_ITEM_RETORNADO_UOL, 5000).clicar(XPATH_PRIMEIRO_ITEM_RETORNADO_UOL);
-	}
+//	public void acessarPrimeiroSiteRetornadoUOL() {
+//		getDSL().esperarAteExistente(XPATH_PRIMEIRO_ITEM_RETORNADO_UOL, 5000).clicar(XPATH_PRIMEIRO_ITEM_RETORNADO_UOL);
+//	}
 }

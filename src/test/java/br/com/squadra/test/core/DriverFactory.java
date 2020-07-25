@@ -53,7 +53,7 @@ public class DriverFactory {
 			
 		}
 		//implicty wait 100 sec because vpn.
-		driver.manage().timeouts().implicitlyWait(300, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 		return driver;
 	}
 	
